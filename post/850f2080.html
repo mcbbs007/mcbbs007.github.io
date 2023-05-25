@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>哈希表 | 武师叔</title><meta name="keywords" content="数据结构与算法"><meta name="author" content="Shishu"><meta name="copyright" content="Shishu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="哈希表 文章内有一些词语和插图，他是方便大家理解，并对算法产生浓厚的兴趣！ 不要根据一些注释，过分曲意理解作者哦！！！！ 文章内容来源本作者对该领域内容的归纳总结，文末附有主要文献来源 文章画图软件（www.processon.com）  哈希表出现缘由要查一个数在数组中的位置，那可是太费劲了，只能从头开始一个个的比较，直到找到相等的才算完事。 这个方法，说实话也太笨了，简直不是我这种懒人应该做的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哈希表">
+<meta property="og:url" content="http://example.com/post/850f2080.html">
+<meta property="og:site_name" content="武师叔">
+<meta property="og:description" content="哈希表 文章内有一些词语和插图，他是方便大家理解，并对算法产生浓厚的兴趣！ 不要根据一些注释，过分曲意理解作者哦！！！！ 文章内容来源本作者对该领域内容的归纳总结，文末附有主要文献来源 文章画图软件（www.processon.com）  哈希表出现缘由要查一个数在数组中的位置，那可是太费劲了，只能从头开始一个个的比较，直到找到相等的才算完事。 这个方法，说实话也太笨了，简直不是我这种懒人应该做的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static001.geekbang.org/infoq/98/9874ff07cfc654ce6c420e4373e52940.jpeg">
+<meta property="article:published_time" content="2022-05-03T05:56:19.281Z">
+<meta property="article:modified_time" content="2022-09-17T12:05:09.026Z">
+<meta property="article:author" content="Shishu">
+<meta property="article:tag" content="数据结构与算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static001.geekbang.org/infoq/98/9874ff07cfc654ce6c420e4373e52940.jpeg"><link rel="shortcut icon" href="https://static001.geekbang.org/infoq/d5/d5d0722a0ec2661dad640887d9a99692.png"><link rel="canonical" href="http://example.com/post/850f2080"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":180},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '哈希表',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-17 20:05:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/flipcountdown.css"><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://static001.geekbang.org/infoq/c1/c1ac453f8f67ab9c4d04a92829afd18b.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://static001.geekbang.org/infoq/98/9874ff07cfc654ce6c420e4373e52940.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">武师叔</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">哈希表</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-03T05:56:19.281Z" title="发表于 2022-05-03 13:56:19">2022-05-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-09-17T12:05:09.026Z" title="更新于 2022-09-17 20:05:09">2022-09-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="哈希表"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h1><blockquote>
+<p>文章内有一些词语和插图，他是方便大家理解，并对算法产生浓厚的兴趣！</p>
+<p>不要根据一些注释，过分曲意理解作者哦！！！！</p>
+<p>文章内容来源本作者对该领域内容的归纳总结，文末附有主要文献来源</p>
+<p>文章画图软件（<a href="www.processon.com">www.processon.com</a>）</p>
+</blockquote>
+<h2 id="哈希表出现缘由"><a href="#哈希表出现缘由" class="headerlink" title="哈希表出现缘由"></a>哈希表出现缘由</h2><p>要查一个数在数组中的位置，那可是太费劲了，只能从头开始一个个的比较，直到找到相等的才算完事。</p>
+<p>这个方法，说实话也太笨了，简直不是我这种懒人应该做的事。</p>
+<p>就不能有种方法直接看到这个数，就直接在数组中查到位置嘛？！</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/20268b76c05e8906b668df95ded5a07a.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>诶，你别说，还真有。</p>
+<p>因为总有比我更懒的，我只是懒是只能躺着，人家大佬的懒是直接动手解决，果然那句”懒是第一生产力“！</p>
+<h2 id="哈希表概述"><a href="#哈希表概述" class="headerlink" title="哈希表概述"></a>哈希表概述</h2><p>这个就是我今天要给家人们带来的<strong>哈希表</strong>。</p>
+<p><img src="https://img-blog.csdnimg.cn/bff4563e6e8046da97e17d46c1135645.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p><strong>哈希表，别名儿叫散列表，洋名儿叫 Hash Table。</strong></p>
+<p>我在上面说，希望有种方法，直接看到数，就知道它在数组中的位置，其实里就用到了哈希思想。</p>
+<p><strong>哈希思想就是说不用一些无用的比较，直接可以通过关键字 key 就能找到它的存储位置。</strong></p>
+<p>这里举一个栗子（可不是堂嫂栗子哦），可能更清楚点：</p>
+<p>智能班有 40 个学生，每个学生的学号由入学年份 + 年级 + 班级 + 编号组成，例如 2020.20.01.32 是 2020 年入学的 20 级 01 班的 32 号同学。（学号怕你看混，给你个”.”分割，贴心不~）</p>
+<p>现在有个需求（烦人的PM）：我们需要快速找到某个同学的个人信息。</p>
+<p>那这个时候我们就要建立一张表，按理来说我要是想要知道某个同学的个人信息，其实就知道学号就好了，但是在这不行，学号的值实在太大了，我们不能把学号当作下标。</p>
+<p>学号不可以，那什么可以呢？我们定睛一看，咦，编号可以呀，编号是从 1 ~ 40。（我真是一个小聪明啊）</p>
+<p><img src="https://img-blog.csdnimg.cn/1bcd7de85b104489a39306633cc6f1c7.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>那咋取到编号？不就是学号对 2020.20.01.00 取余就 KO了嘛。(你不会没理解把，不就是相当于(上面栗子32这位大帅哥)，32&#x2F;00&#x3D;32嘛)</p>
+<p>此时，如果我们想查学号为 2020.20.01.32 的学生个人信息，只要访问下标为 32的数据即可。</p>
+<p>其实这就可以在时间复杂度为 O(1) 内解决找到。（不要问我什么是时间复杂的，什么是空间复杂度，生产队的LV马上更，不要打拉）</p>
+<p>秒男实锤了。（这摸快，O(1)，比三秒都快哦）</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/1f3a8882e5fe6c5b560eeb38555bbbe6.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>用公式表示就是：**存储位置 &#x3D; f(关键字)**。</p>
+<p>这里的 <strong>f 又叫做哈希函数，每个 key 被对应到 0 ~ N-1 的范围内，并且放在合适的位置。</strong></p>
+<p>在上面的例子中 f(key) &#x3D; key % 2021210100。</p>
+<p><img src="https://img-blog.csdnimg.cn/062e5964757e4d2da53d2033c66d5db8.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>存储时，通过同一个哈希函数的计算 key 的哈希地址，并按照此哈希地址存储该 key。</p>
+<p>最后形成的表就是<strong>哈希表，它主要是面向查找的存储结构，简化了比较的过程，提高了效率。</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/6c3a6a518174f28f5e737068b08382f5.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<h2 id="哈希示例"><a href="#哈希示例" class="headerlink" title="哈希示例"></a>哈希示例</h2><p>上面看明白的话，那再举个大栗子加深点印象。</p>
+<p>有个 n &#x3D; 10 的数组，哈希函数 f(key) &#x3D; key % 10，将 4，10，11，19，29，39 散列到数组中。</p>
+<p>哈希函数确定后，剩下的就是计算关键字对应的存储位置。</p>
+<p>4 % 10 &#x3D; 4，所以将 4 放入下标为 4 的位置。</p>
+<p><img src="https://img-blog.csdnimg.cn/efdb86b8e40b486f92abab60e215dd9f.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p> 10 % 10 &#x3D; 0，所以将 10 放入下标为 0 的位置。</p>
+<p><img src="https://img-blog.csdnimg.cn/80075c9306554be2b75d52c72b7ba6f5.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>11 % 10 &#x3D; 1，所以将 11 放入下标为 1 的位置。</p>
+<p><img src="https://img-blog.csdnimg.cn/186ed1467b23497eafed38ba8840c73e.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>19 % 10 &#x3D; 9，所以将 19 放入下标为 9 的位置。</p>
+<p><img src="https://img-blog.csdnimg.cn/6da59d1dcaf34e8ab58fd1b28a3f52fc.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>29 % 10 &#x3D; 9，所以将 29 放入下标为 9 的位置。</p>
+<p>但是现在问题来了，下标为 9 的这个坑已经被 19 占了，这 29 计算出来的下标冲突了。（作为工具人的我，呜呜，就让我为你来平定冲突和亲去，昭君我来了）</p>
+<p><img src="https://img-blog.csdnimg.cn/eea0fadd357c4ea2901201c01a5cd1e7.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>这种情况有个学名，叫：<strong>哈希（散列）冲突</strong>。</p>
+<h2 id="处理哈希冲突"><a href="#处理哈希冲突" class="headerlink" title="处理哈希冲突"></a>处理哈希冲突</h2><p>对于两个不相等的关键字 key1 和 key2，若 f(key1) &#x3D; f(key2)，这就是哈希冲突。</p>
+<p>key1 占了坑，那 key2 只能想别的办法，啥办法呢？</p>
+<p>一般处理哈希冲突有以下几种办法：</p>
+<ul>
+<li>开放定址法</li>
+<li>再哈希（散列）函数法</li>
+<li>链地址法</li>
+<li>。。。(别想了，就等你来创造一个，作为算法“行业冥灯”，击垮他们！)</li>
+</ul>
+<h3 id="开放定址法"><a href="#开放定址法" class="headerlink" title="开放定址法"></a><strong>开放定址法</strong></h3><p><strong>开放定址法就是：一旦发生冲突，就选择另外一个可用的位置。</strong></p>
+<p>开放定址法有 2 个最常用的策略：</p>
+<ul>
+<li>线性探测法</li>
+<li>二次探测法</li>
+</ul>
+<h4 id="线性探测法"><a href="#线性探测法" class="headerlink" title="线性探测法"></a><strong>线性探测法</strong></h4><p><strong>线性探测法，顾名思义，直来直去的探测。</strong></p>
+<p>且看它的公式：</p>
+<p><strong>f(key) &#x3D; (f(key) + di) % m (di &#x3D; 1, 2, 3, … , m-1)。</strong></p>
+<p>我还是用“哈希示例”中的栗子（栗子都快熟了）：</p>
+<p>n &#x3D; 10 的数组，哈希函数 f(key) &#x3D; key % 10，将 4，10，11，19，29，39 散列到数组中。</p>
+<p><img src="https://img-blog.csdnimg.cn/bfbb6f258edb47dc8be44b09c35f8863.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>到了 29 的时候，29 % 10 &#x3D; 9。</p>
+<p>但此时下标 9 已经有了元素 19，所以此时探测下一个位置 (9 + 1) % 10 &#x3D; 0。</p>
+<p>下标为 0 的位置上已经有了元素 10，所以继续探测下一个位置 (9 + 2) % 10 &#x3D; 1。</p>
+<p>下标为 1 的位置上也有了元素 11，所以还得继续探测下一个位置 (9 + 3) % 10 &#x3D; 2。</p>
+<p>下标为 2 的位置上总算是空的，因此 29 找到了家（我家的猫不会跳舞，但是会爬树）：</p>
+<p><img src="https://img-blog.csdnimg.cn/c8eb7e2e7ba9402ea1bf38649e2a9a78.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>不知道你发现了没，对于 29 这个来说，本来只是和 19 冲突，整着整着和 10，11 也冲突了。</p>
+<p><strong>这样就使得每次要处理好几次冲突，而且这样会出现大量数字聚集在一个区域的情况，大大降低了插入和查找的效率。</strong></p>
+<p>后来不知道哪个大佬在线性的基础上做了改进，捣鼓出二次探测法。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/c1085dfd1d2ae6782dc81a8b324328c7.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<h4 id="二次探测法"><a href="#二次探测法" class="headerlink" title="二次探测法"></a><strong>二次探测法</strong></h4><p><strong>二次探测法就是把之前的 di 整成了平方</strong>，公式如下：</p>
+<p><strong>f(key) &#x3D; (f(key) + di) % m (di &#x3D; 1², -1², 2², -2², …, q², -q², q ≤ m&#x2F;2)</strong></p>
+<p>比如对于 29 来说，下标为 9 的位置上呆了19，所以此时探测下一个位置 (9 + 1²) % 10 &#x3D; 0。</p>
+<p>下标为 0 的位置上占了元素 10，那下一次就探测上一个位置 (9 - 1²) % 10 &#x3D; 8。</p>
+<p>下标为 8 的位置上空着，直接占住：</p>
+<p><img src="https://img-blog.csdnimg.cn/28095e6f94aa40558534372262f521f1.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/fad81605b7d6d3da5a7456af192304d1.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<h3 id="再哈希（散列）函数法"><a href="#再哈希（散列）函数法" class="headerlink" title="再哈希（散列）函数法"></a><strong>再哈希（散列）函数法</strong></h3><p><strong>再哈希的话，就是不只是一个哈希函数，而是使用一组哈希函数 f1(key)、f2(key)、f3(key)….。</strong></p>
+<p>当使用第一个哈希函数计算到的存储位置被占了，那就用第二个哈希函数计算，反正总会有一个散列函数能把冲突解决掉。</p>
+<p>依次类推，直到找到空的位置，然后占住。</p>
+<p>当然这种方法不会出现大量数字聚集在一个区域的情况，但这种情况明显增加了计算的时间。</p>
+<h3 id="链地址法"><a href="#链地址法" class="headerlink" title="链地址法"></a><strong>链地址法</strong></h3><p>是谁说出现冲突后只能找别的坑位的，几个人蹲一个坑它不香嘛。（还记得伦敦的谜语吗）</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/b7c83a9351ffd8b3e07300b1a34482a1.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>可能真的有巨佬觉得香，然后就整出了链地址法。</p>
+<p><strong>链地址法呢是将得出同一个结果的 key 放在一个单链表中，哈希表存储每条单链表的头指针。</strong></p>
+<p>还是用老栗子：n &#x3D; 10 的数组，哈希函数 f(key) &#x3D; key % 10，将 4，10，11，19，29，39 散列。</p>
+<p>最后得到如下图：</p>
+<p><img src="https://img-blog.csdnimg.cn/ed555836b7e248f5b730f9a612eee67e.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<p>你看，链地址法就不会出现此坑被占，就得去找别的坑的情况。</p>
+<p>大家一起蹲，这样就绝不会出现找不到地址的情况，而是直接插到对应的单链表中即可，所以**插入的时间复杂度为 O(1)**。</p>
+<p>当然有得必有失，这样的情况必然造成了查找上的性能损耗，这里的<strong>查找的时间复杂度为 O(k)，其中 k &#x3D; n &#x2F; 单链表条数</strong>。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/b2be5c360f5db7b3b6da19870971e01c.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<h2 id="结语和附录"><a href="#结语和附录" class="headerlink" title="结语和附录"></a>结语和附录</h2><p>好啦，到这里<strong>哈希表</strong>就讲完辣，是不是看起来还挺简单的。</p>
+<p>哈希表作为非常高高高高高效的查找数据结构，丢掉了关键字之间反复无意义的比较，直接一步到位查找结果，非常顶（咳咳）。</p>
+<p>这么看来它处理冲突啥的这点屁事就显得不是那么烦人了，毕竟有得有失才对嘛。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/fad81605b7d6d3da5a7456af192304d1.png" alt="img"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<blockquote>
+<p>文献来源：</p>
+<p>编程文青李狗蛋——ACM 选手带你玩转哈希表！</p>
+<p>LeetCode 242题目中的解法和讨论区</p>
+</blockquote>
+<blockquote>
+<p>公众号：武师叔</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Shishu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/850f2080.html">http://example.com/post/850f2080.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">武师叔</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a></div><div class="post_share"><div class="social-share" data-image="https://static001.geekbang.org/infoq/98/9874ff07cfc654ce6c420e4373e52940.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://img-blog.csdnimg.cn/3f67bf23dead46deaa50b9575d2509ba.png" target="_blank"><img class="post-qr-code-img" src="https://img-blog.csdnimg.cn/3f67bf23dead46deaa50b9575d2509ba.png" alt="微信支付"/></a><div class="post-qr-code-desc">微信支付</div></li><li class="reward-item"><a href="https://img-blog.csdnimg.cn/fdbf755dba2d4cd8bac1b4a5654ee695.png" target="_blank"><img class="post-qr-code-img" src="https://img-blog.csdnimg.cn/fdbf755dba2d4cd8bac1b4a5654ee695.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/post/9e43dbe9.html"><img class="prev-cover" src="https://static001.geekbang.org/infoq/64/64251657632e52f3f751111519a2ba42.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">一个双非计算机学生的长远规划（考研篇）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/50816dfc.html" title="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）"><img class="cover" src="https://static001.geekbang.org/infoq/ad/ade3f12aa8e618298b360c36d227d69b.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-17</div><div class="title">大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://static001.geekbang.org/infoq/c1/c1ac453f8f67ab9c4d04a92829afd18b.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Shishu</div><div class="author-info__description">做一个有趣而不甘平庸的人！</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/521754445"><i class="iconfont icon-youxishoubing"></i><span>摸鱼</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://m.qpic.cn/psc?/V53WhVZM1zBmH82CmFwL0UozAc1z3onc/ruAMsa53pVQWN7FLK88i5mhCK83VD7tAOVZT.GYfY0OWO.NRsrmuM*NxJf1ToObkkOK.ggMBbqkkTXmTn7PP*HoUhVmrKo8S6x3wSi2Yc.Q!/b&amp;bo=OARnBQAAAAABF24!&amp;rf=viewer_4" target="_blank" title="微信"><i class="iconfont icon-weixin"></i></a><a class="social-icon" href="https://blog.csdn.net/wushibo123" target="_blank" title="CSDN"><i class="iconfont icon-csdn"></i></a><a class="social-icon" href="https://github.com/Wushishu" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://juejin.cn/user/1464978572059806" target="_blank" title="掘金"><i class="iconfont icon-juejin"></i></a><a class="social-icon" href="https://space.bilibili.com/521754445" target="_blank" title="bilibili"><i class="iconfont icon-bilibili"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><b><center><font color="#e66b6d">双</font> <font color="#e66d98">手</font> <font color="#e66cc6">合</font> <font color="#cc6de6">十</font> <font color="#9770e6">成</font> <font color="#6d93e6">为</font> <font color="#6fcde6">自</font> <font color="#72e6b6">己</font> <font color="#72e689">的</font> <font color="#99e670">神</font> </center>   <br> <center><font color="#cde670">自</font> <font color="#e6df72">己</font> <font color="#e6c073">所</font> <font color="#e6a271">信</font> <font color="#e6796f">念</font> <font color="#e65454">的</font> <font color="#e63333">即</font> <font color="#e62c2c">是</font> <font color="#e60101">信</font> <font color="#e60101">仰</font></b></center> <p align="center"><img src="https://img-blog.csdnimg.cn/f7384c88956d4378b72e47548e19c9f8.gif" width="50" alt="mao"></p> <p align="center">微信号：wushibo0820</p> <p align="center">QQ号：2116099522</p></div></div><canvas class="illo" width="800" height="800" style="max-width: 200px; max-height: 200px; touch-action: none; width: 640px; height: 640px;"></canvas><script src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/twopeople1.js"></script><script src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/zdog.dist.js"></script><script id="rendered-js" src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/twopeople.js"></script><style>.card-widget.card-announcement {
+margin: 0;
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+canvas {
+display: block;
+margin: 0 auto;
+cursor: move;
+}</style><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">哈希表</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8%E5%87%BA%E7%8E%B0%E7%BC%98%E7%94%B1"><span class="toc-number">1.1.</span> <span class="toc-text">哈希表出现缘由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8%E6%A6%82%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">哈希表概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.3.</span> <span class="toc-text">哈希示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81"><span class="toc-number">1.4.</span> <span class="toc-text">处理哈希冲突</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%94%BE%E5%AE%9A%E5%9D%80%E6%B3%95"><span class="toc-number">1.4.1.</span> <span class="toc-text">开放定址法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E6%8E%A2%E6%B5%8B%E6%B3%95"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">线性探测法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E6%AC%A1%E6%8E%A2%E6%B5%8B%E6%B3%95"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">二次探测法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%8D%E5%93%88%E5%B8%8C%EF%BC%88%E6%95%A3%E5%88%97%EF%BC%89%E5%87%BD%E6%95%B0%E6%B3%95"><span class="toc-number">1.4.2.</span> <span class="toc-text">再哈希（散列）函数法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E5%9C%B0%E5%9D%80%E6%B3%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">链地址法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD%E5%92%8C%E9%99%84%E5%BD%95"><span class="toc-number">1.5.</span> <span class="toc-text">结语和附录</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/50816dfc.html" title="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）"><img src="https://static001.geekbang.org/infoq/ad/ade3f12aa8e618298b360c36d227d69b.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）"/></a><div class="content"><a class="title" href="/post/50816dfc.html" title="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）">大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）</a><time datetime="2022-09-17T12:34:20.000Z" title="发表于 2022-09-17 20:34:20">2022-09-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/9a29ab04.html" title="一个特殊的母亲节"><img src="https://img-blog.csdnimg.cn/8ea7ef1761fd402dad8dbdf719d2e3dd.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一个特殊的母亲节"/></a><div class="content"><a class="title" href="/post/9a29ab04.html" title="一个特殊的母亲节">一个特殊的母亲节</a><time datetime="2022-05-08T11:54:20.000Z" title="发表于 2022-05-08 19:54:20">2022-05-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/c2045a9e.html" title="leecode206（反转链表）"><img src="https://static001.geekbang.org/infoq/e1/e199fa3ae9eddd039c1f66a406486b2f.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leecode206（反转链表）"/></a><div class="content"><a class="title" href="/post/c2045a9e.html" title="leecode206（反转链表）">leecode206（反转链表）</a><time datetime="2022-05-07T11:56:03.000Z" title="发表于 2022-05-07 19:56:03">2022-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/3454cac5.html" title="leecode59（ 螺旋矩阵 II）"><img src="https://static001.geekbang.org/infoq/c6/c6cd78b51d09f0295f79dacb0d0d7d2a.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leecode59（ 螺旋矩阵 II）"/></a><div class="content"><a class="title" href="/post/3454cac5.html" title="leecode59（ 螺旋矩阵 II）">leecode59（ 螺旋矩阵 II）</a><time datetime="2022-05-07T11:53:00.000Z" title="发表于 2022-05-07 19:53:00">2022-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/20200563.html" title="PAT乙级1002-写出这个数"><img src="https://static001.geekbang.org/infoq/40/402ebe69bfa9acb19740af0c183dbea7.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PAT乙级1002-写出这个数"/></a><div class="content"><a class="title" href="/post/20200563.html" title="PAT乙级1002-写出这个数">PAT乙级1002-写出这个数</a><time datetime="2022-05-07T11:49:15.000Z" title="发表于 2022-05-07 19:49:15">2022-05-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://static001.geekbang.org/infoq/98/9874ff07cfc654ce6c420e4373e52940.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Shishu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script async src="/js/weather.js"></script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script defer src="/live2d-widget/autoload.js"></script>'<script src="/js/sun_moon.js" async></script>'<script async src="//at.alicdn.com/t/font_2264842_3izu8i5eoc2.js"></script><script async src="//at.alicdn.com/t/font_3277826_xghotx9h49q.js"></script><script async src="//at.alicdn.com/t/font_2032782_ev6ytrh30f.js"></script><script async src="//at.alicdn.com/t/font_2032782_8ns648avijk.js"></script><script data-pjax defer src="/js/custom/fixed_card_widget.js"></script><script src="https://npm.elemecdn.com/jquery@latest/dist/jquery.min.js"></script><script src="/js/flipcountdown.js"></script><script data-pjax src="/js/runtime.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = ture;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

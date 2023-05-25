@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>LeeCode24（交换链表） | 武师叔</title><meta name="keywords" content="LeeCode,算法"><meta name="author" content="Shishu"><meta name="copyright" content="Shishu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="LeetCode 24：交换链表快来点我去练习——-GO    题意两两交换链表相邻节点的值，返回交换后的链表。 示例输入：head &#x3D; [1, 2, 3, 4] 输出： [2, 1, 4, 3] 题目解析水题，难度中等。 这道题要求不能只是单纯的改变节点内部得值，需要进行实际的节点交换。 和反转链表一样，这类链表题思维上没有难度，就是每次从链表上截取两个节点进行交换。 主要是考察代码实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeeCode24（交换链表）">
+<meta property="og:url" content="http://example.com/post/424c839a.html">
+<meta property="og:site_name" content="武师叔">
+<meta property="og:description" content="LeetCode 24：交换链表快来点我去练习——-GO    题意两两交换链表相邻节点的值，返回交换后的链表。 示例输入：head &#x3D; [1, 2, 3, 4] 输出： [2, 1, 4, 3] 题目解析水题，难度中等。 这道题要求不能只是单纯的改变节点内部得值，需要进行实际的节点交换。 和反转链表一样，这类链表题思维上没有难度，就是每次从链表上截取两个节点进行交换。 主要是考察代码实">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static001.geekbang.org/infoq/72/729058068e4650b0ad7c741be9da53e0.jpeg">
+<meta property="article:published_time" content="2022-05-07T06:04:54.000Z">
+<meta property="article:modified_time" content="2022-09-17T11:57:01.882Z">
+<meta property="article:author" content="Shishu">
+<meta property="article:tag" content="LeeCode">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static001.geekbang.org/infoq/72/729058068e4650b0ad7c741be9da53e0.jpeg"><link rel="shortcut icon" href="https://static001.geekbang.org/infoq/d5/d5d0722a0ec2661dad640887d9a99692.png"><link rel="canonical" href="http://example.com/post/424c839a"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":180},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LeeCode24（交换链表）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-17 19:57:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/flipcountdown.css"><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://static001.geekbang.org/infoq/c1/c1ac453f8f67ab9c4d04a92829afd18b.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://static001.geekbang.org/infoq/72/729058068e4650b0ad7c741be9da53e0.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">武师叔</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LeeCode24（交换链表）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-07T06:04:54.000Z" title="发表于 2022-05-07 14:04:54">2022-05-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-09-17T11:57:01.882Z" title="更新于 2022-09-17 19:57:01">2022-09-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">824</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LeeCode24（交换链表）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="LeetCode-24：交换链表"><a href="#LeetCode-24：交换链表" class="headerlink" title="LeetCode 24：交换链表"></a>LeetCode 24：交换链表</h1><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/swap-nodes-in-pairs/">快来点我去练习——-GO</a></p>
+<iframe src="//player.bilibili.com/player.html?aid=683391954&bvid=BV19S4y1A7hH&cid=582501993&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" width="800" height="500" allowfullscreen="true"> </iframe>
+
+<h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>两两交换链表相邻节点的值，返回交换后的链表。</p>
+<p>示例<br>输入：head &#x3D; [1, 2, 3, 4]</p>
+<p>输出： [2, 1, 4, 3]</p>
+<h2 id="题目解析"><a href="#题目解析" class="headerlink" title="题目解析"></a>题目解析</h2><p>水题，难度中等。</p>
+<p>这道题要求不能只是单纯的改变节点内部得值，需要进行实际的节点交换。</p>
+<p>和反转链表一样，这类链表题思维上没有难度，就是每次从链表上截取两个节点进行交换。</p>
+<p>主要是考察代码实现能力。</p>
+<p>这道题我用带虚拟头节点的单链表实现。</p>
+<p>虚拟头节点（其实我以前都叫头节点我就叫虚拟头节点），可能很多人叫做哨兵节点，放在第一个元素的节点之前，数据域一般没意义。</p>
+<p><strong>图解</strong><br>先建立一个带虚拟头节点的单链表。<br><img src="https://img-blog.csdnimg.cn/e57ca7b186cf4c8a82d9d4df99aed97e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5q2m5biI5Y-U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br>PS：此处代码为 Python（”代码实现“小节处有 Java 代码，下同）。<br><img src="https://img-blog.csdnimg.cn/a919c12f1ff04144a9e958519a8aa28c.png" alt="在这里插入图片描述"></p>
+<h3 id="链表节点类"><a href="#链表节点类" class="headerlink" title="链表节点类"></a>链表节点类</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class ListNode:</span><br><span class="line">     def __init__(self, val=0, next=None):</span><br><span class="line">         self.val = val</span><br><span class="line">         self.next = next</span><br><span class="line"></span><br><span class="line">### 创建虚拟节点</span><br><span class="line">dummyHead = ListNode(-1)</span><br></pre></td></tr></table></figure>
+
+
+<p>因为每次要截取两个节点进行交换，初始建立 3 个指针 pre，p 和 q。</p>
+<p>其中 pre 指向虚拟头节点，p 指向链表首节点，q 指向链表的第 2 个节点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pre = dummyHead</span><br><span class="line">p = head</span><br><span class="line">q = p.next</span><br></pre></td></tr></table></figure>
+<p>节点两两交换主要分为 3 步。</p>
+<p>第 1 步：pre 的后继指针 next 指向 q，即 pre.next &#x3D; q。<br><img src="https://img-blog.csdnimg.cn/62fb7d9087e74a0480cf13f2fa7419fd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5q2m5biI5Y-U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>第 2 步：p 的后继指针 next 指向 q 的后继节点，即 p.next &#x3D; q.next。<br><img src="https://img-blog.csdnimg.cn/71a80509186c4f848380a3350e6b5575.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5q2m5biI5Y-U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>第 3 步：那就剩了 q 的后继指针 next 指向 p，即 q.next &#x3D; p。</p>
+<p><img src="https://img-blog.csdnimg.cn/e2a61d1a1971443e9d63ffafcacf1ed4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5q2m5biI5Y-U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>所以第一次交换完，链表变成了：</p>
+<p><img src="https://img-blog.csdnimg.cn/d0f3e17a2abe41039e2855ce8af3ed7a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5q2m5biI5Y-U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pre.next = q</span><br><span class="line">p.next = q.next</span><br><span class="line">q.next = p</span><br></pre></td></tr></table></figure>
+
+<p>接下来就是 pre、p 和 q 指针同时右移。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pre = p</span><br><span class="line">p = p.next</span><br><span class="line">q = p.next</span><br></pre></td></tr></table></figure>
+
+<p>继续重复上述 3 步操作。</p>
+<p>本方法遍历一遍链表，<strong>时间复杂度为 O(n)，空间复杂度为 O(1)。</strong></p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"># Definition for singly-linked list.</span><br><span class="line"># class ListNode:</span><br><span class="line">#     def __init__(self, val=0, next=None):</span><br><span class="line">#         self.val = val</span><br><span class="line">#         self.next = next</span><br><span class="line">class Solution:</span><br><span class="line">    def swapPairs(self, head: ListNode) -&gt; ListNode:</span><br><span class="line"></span><br><span class="line">        # 空链表或者只有一个节点，直接返回</span><br><span class="line">        if not head or head.next == None:</span><br><span class="line">            return head</span><br><span class="line"></span><br><span class="line">        # 创建虚拟节点</span><br><span class="line">        dummyHead = ListNode(-1)</span><br><span class="line"></span><br><span class="line">        # 初始化pre、p 节点</span><br><span class="line">        pre = dummyHead</span><br><span class="line">        p = head</span><br><span class="line"></span><br><span class="line">        # 必须是节点数是偶数个的时候才能交换</span><br><span class="line">        # 如果最后只剩下一个节点，即链表是奇数个节点，最后一个不用反转</span><br><span class="line">        # 比如 head = [1,2, 3, 4, 5],输出 [2, 1, 4, 3, 5]</span><br><span class="line">        while p and p.next:</span><br><span class="line">            # 初始化 q 节点</span><br><span class="line">            q = p.next</span><br><span class="line"></span><br><span class="line">            # 交换节点 3 步走</span><br><span class="line">            pre.next = q</span><br><span class="line">            p.next = q.next</span><br><span class="line">            q.next = p</span><br><span class="line">            </span><br><span class="line">            # 指针右移</span><br><span class="line">            pre = p</span><br><span class="line">            p = p.next</span><br><span class="line">        </span><br><span class="line">        # 返回链表</span><br><span class="line">        return dummyHead.next</span><br></pre></td></tr></table></figure>
+
+<h3 id="Java-代码实现"><a href="#Java-代码实现" class="headerlink" title="Java 代码实现"></a>Java 代码实现</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 虚拟头结点</span><br><span class="line">class Solution &#123;</span><br><span class="line">  public ListNode swapPairs(ListNode head) &#123;</span><br><span class="line"></span><br><span class="line">    ListNode dummyNode = new ListNode(0);</span><br><span class="line">    dummyNode.next = head;</span><br><span class="line">    ListNode prev = dummyNode;</span><br><span class="line"></span><br><span class="line">    while (prev.next != null &amp;&amp; prev.next.next != null) &#123;</span><br><span class="line">      ListNode temp = head.next.next; // 缓存 next</span><br><span class="line">      prev.next = head.next;          // 将 prev 的 next 改为 head 的 next</span><br><span class="line">      head.next.next = head;          // 将 head.next(prev.next) 的next，指向 head</span><br><span class="line">      head.next = temp;               // 将head 的 next 接上缓存的temp</span><br><span class="line">      prev = head;                    // 步进1位</span><br><span class="line">      head = head.next;               // 步进1位</span><br><span class="line">    &#125;</span><br><span class="line">    return dummyNode.next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>图解交换链表到这就结束啦。</p>
+<p>按照我的图解在纸上画一下加深印象，步骤不要出错。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Shishu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/424c839a.html">http://example.com/post/424c839a.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">武师叔</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LeeCode/">LeeCode</a><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a></div><div class="post_share"><div class="social-share" data-image="https://static001.geekbang.org/infoq/72/729058068e4650b0ad7c741be9da53e0.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://img-blog.csdnimg.cn/3f67bf23dead46deaa50b9575d2509ba.png" target="_blank"><img class="post-qr-code-img" src="https://img-blog.csdnimg.cn/3f67bf23dead46deaa50b9575d2509ba.png" alt="微信支付"/></a><div class="post-qr-code-desc">微信支付</div></li><li class="reward-item"><a href="https://img-blog.csdnimg.cn/fdbf755dba2d4cd8bac1b4a5654ee695.png" target="_blank"><img class="post-qr-code-img" src="https://img-blog.csdnimg.cn/fdbf755dba2d4cd8bac1b4a5654ee695.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/cb3dd788.html"><img class="prev-cover" src="https://static001.geekbang.org/infoq/14/14fbd87495092a48270d76bb6fb26ac0.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LeetCode27（移除元素）</div></div></a></div><div class="next-post pull-right"><a href="/post/be8880ea.html"><img class="next-cover" src="https://static001.geekbang.org/infoq/37/37f871fa57ac5bf42d31cd6636078d86.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hexo+github搭建个人博客</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/979a90c3.html" title="LeeCode203（移除链表元素）"><img class="cover" src="https://static001.geekbang.org/infoq/bd/bd038f46b6d2340c067957def23d91f5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-05</div><div class="title">LeeCode203（移除链表元素）</div></div></a></div><div><a href="/post/3af17477.html" title="LeeCode704（二分查找）"><img class="cover" src="https://static001.geekbang.org/infoq/61/6194b362b4a37a97dc0c6d0acc646c4c.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-05</div><div class="title">LeeCode704（二分查找）</div></div></a></div><div><a href="/post/fced4a1b.html" title="LeetCode26（删除有序数组中的重复项）"><img class="cover" src="https://static001.geekbang.org/infoq/f5/f53eaa53ff341af6ede333d68eb2f388.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-07</div><div class="title">LeetCode26（删除有序数组中的重复项）</div></div></a></div><div><a href="/post/e079797d.html" title="LeetCode122（买卖股票最佳时机II）"><img class="cover" src="https://static001.geekbang.org/infoq/45/45af07ac93f3239eb25ec5a8c1f5b3d4.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-07</div><div class="title">LeetCode122（买卖股票最佳时机II）</div></div></a></div><div><a href="/post/cb3dd788.html" title="LeetCode27（移除元素）"><img class="cover" src="https://static001.geekbang.org/infoq/14/14fbd87495092a48270d76bb6fb26ac0.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-07</div><div class="title">LeetCode27（移除元素）</div></div></a></div><div><a href="/post/c9962516.html" title="LeetCode977（有序数组的平方）"><img class="cover" src="https://static001.geekbang.org/infoq/a1/a1550fe86a9ad9400f86d0b5e4aed03d.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-07</div><div class="title">LeetCode977（有序数组的平方）</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://static001.geekbang.org/infoq/c1/c1ac453f8f67ab9c4d04a92829afd18b.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Shishu</div><div class="author-info__description">做一个有趣而不甘平庸的人！</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/521754445"><i class="iconfont icon-youxishoubing"></i><span>摸鱼</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://m.qpic.cn/psc?/V53WhVZM1zBmH82CmFwL0UozAc1z3onc/ruAMsa53pVQWN7FLK88i5mhCK83VD7tAOVZT.GYfY0OWO.NRsrmuM*NxJf1ToObkkOK.ggMBbqkkTXmTn7PP*HoUhVmrKo8S6x3wSi2Yc.Q!/b&amp;bo=OARnBQAAAAABF24!&amp;rf=viewer_4" target="_blank" title="微信"><i class="iconfont icon-weixin"></i></a><a class="social-icon" href="https://blog.csdn.net/wushibo123" target="_blank" title="CSDN"><i class="iconfont icon-csdn"></i></a><a class="social-icon" href="https://github.com/Wushishu" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://juejin.cn/user/1464978572059806" target="_blank" title="掘金"><i class="iconfont icon-juejin"></i></a><a class="social-icon" href="https://space.bilibili.com/521754445" target="_blank" title="bilibili"><i class="iconfont icon-bilibili"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><b><center><font color="#e66b6d">双</font> <font color="#e66d98">手</font> <font color="#e66cc6">合</font> <font color="#cc6de6">十</font> <font color="#9770e6">成</font> <font color="#6d93e6">为</font> <font color="#6fcde6">自</font> <font color="#72e6b6">己</font> <font color="#72e689">的</font> <font color="#99e670">神</font> </center>   <br> <center><font color="#cde670">自</font> <font color="#e6df72">己</font> <font color="#e6c073">所</font> <font color="#e6a271">信</font> <font color="#e6796f">念</font> <font color="#e65454">的</font> <font color="#e63333">即</font> <font color="#e62c2c">是</font> <font color="#e60101">信</font> <font color="#e60101">仰</font></b></center> <p align="center"><img src="https://img-blog.csdnimg.cn/f7384c88956d4378b72e47548e19c9f8.gif" width="50" alt="mao"></p> <p align="center">微信号：wushibo0820</p> <p align="center">QQ号：2116099522</p></div></div><canvas class="illo" width="800" height="800" style="max-width: 200px; max-height: 200px; touch-action: none; width: 640px; height: 640px;"></canvas><script src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/twopeople1.js"></script><script src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/zdog.dist.js"></script><script id="rendered-js" src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/twopeople.js"></script><style>.card-widget.card-announcement {
+margin: 0;
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+canvas {
+display: block;
+margin: 0 auto;
+cursor: move;
+}</style><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LeetCode-24%EF%BC%9A%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">LeetCode 24：交换链表</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E6%84%8F"><span class="toc-number">1.1.</span> <span class="toc-text">题意</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E8%A7%A3%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">题目解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E8%A1%A8%E8%8A%82%E7%82%B9%E7%B1%BB"><span class="toc-number">1.2.1.</span> <span class="toc-text">链表节点类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.1.</span> <span class="toc-text">Python 代码实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.2.</span> <span class="toc-text">Java 代码实现</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/50816dfc.html" title="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）"><img src="https://static001.geekbang.org/infoq/ad/ade3f12aa8e618298b360c36d227d69b.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）"/></a><div class="content"><a class="title" href="/post/50816dfc.html" title="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）">大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）</a><time datetime="2022-09-17T12:34:20.000Z" title="发表于 2022-09-17 20:34:20">2022-09-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/9a29ab04.html" title="一个特殊的母亲节"><img src="https://img-blog.csdnimg.cn/8ea7ef1761fd402dad8dbdf719d2e3dd.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一个特殊的母亲节"/></a><div class="content"><a class="title" href="/post/9a29ab04.html" title="一个特殊的母亲节">一个特殊的母亲节</a><time datetime="2022-05-08T11:54:20.000Z" title="发表于 2022-05-08 19:54:20">2022-05-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/c2045a9e.html" title="leecode206（反转链表）"><img src="https://static001.geekbang.org/infoq/e1/e199fa3ae9eddd039c1f66a406486b2f.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leecode206（反转链表）"/></a><div class="content"><a class="title" href="/post/c2045a9e.html" title="leecode206（反转链表）">leecode206（反转链表）</a><time datetime="2022-05-07T11:56:03.000Z" title="发表于 2022-05-07 19:56:03">2022-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/3454cac5.html" title="leecode59（ 螺旋矩阵 II）"><img src="https://static001.geekbang.org/infoq/c6/c6cd78b51d09f0295f79dacb0d0d7d2a.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leecode59（ 螺旋矩阵 II）"/></a><div class="content"><a class="title" href="/post/3454cac5.html" title="leecode59（ 螺旋矩阵 II）">leecode59（ 螺旋矩阵 II）</a><time datetime="2022-05-07T11:53:00.000Z" title="发表于 2022-05-07 19:53:00">2022-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/20200563.html" title="PAT乙级1002-写出这个数"><img src="https://static001.geekbang.org/infoq/40/402ebe69bfa9acb19740af0c183dbea7.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PAT乙级1002-写出这个数"/></a><div class="content"><a class="title" href="/post/20200563.html" title="PAT乙级1002-写出这个数">PAT乙级1002-写出这个数</a><time datetime="2022-05-07T11:49:15.000Z" title="发表于 2022-05-07 19:49:15">2022-05-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://static001.geekbang.org/infoq/72/729058068e4650b0ad7c741be9da53e0.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Shishu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script async src="/js/weather.js"></script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script defer src="/live2d-widget/autoload.js"></script>'<script src="/js/sun_moon.js" async></script>'<script async src="//at.alicdn.com/t/font_2264842_3izu8i5eoc2.js"></script><script async src="//at.alicdn.com/t/font_3277826_xghotx9h49q.js"></script><script async src="//at.alicdn.com/t/font_2032782_ev6ytrh30f.js"></script><script async src="//at.alicdn.com/t/font_2032782_8ns648avijk.js"></script><script data-pjax defer src="/js/custom/fixed_card_widget.js"></script><script src="https://npm.elemecdn.com/jquery@latest/dist/jquery.min.js"></script><script src="/js/flipcountdown.js"></script><script data-pjax src="/js/runtime.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = ture;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

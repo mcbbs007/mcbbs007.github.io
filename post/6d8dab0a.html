@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Python应用实践——设计一个学生管理系统 | 武师叔</title><meta name="keywords" content="python"><meta name="author" content="Shishu"><meta name="copyright" content="Shishu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="项目要求 设计一个学生管理系统关联的主要课程目标： Python 函数和模块、Python文件的数据读取及操作等。 项目要求：设计一个学生管理系统，实现学生基本信息（学号、姓名、性别）的录入、删除和查看、读取及保存功能。 项目指导：可将学生管理系统分为六个小模块：添加学生信息模块、删除学生信息模块、显示所有学生信息模块、保存数据模块、恢复数据模块、退出系统模块等。每个功能模块用函数来实现。  定义">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python应用实践——设计一个学生管理系统">
+<meta property="og:url" content="http://example.com/post/6d8dab0a.html">
+<meta property="og:site_name" content="武师叔">
+<meta property="og:description" content="项目要求 设计一个学生管理系统关联的主要课程目标： Python 函数和模块、Python文件的数据读取及操作等。 项目要求：设计一个学生管理系统，实现学生基本信息（学号、姓名、性别）的录入、删除和查看、读取及保存功能。 项目指导：可将学生管理系统分为六个小模块：添加学生信息模块、删除学生信息模块、显示所有学生信息模块、保存数据模块、恢复数据模块、退出系统模块等。每个功能模块用函数来实现。  定义">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static001.geekbang.org/infoq/07/07b2035f17caa952d5b8145a7699ede7.jpeg">
+<meta property="article:published_time" content="2022-05-05T11:47:20.000Z">
+<meta property="article:modified_time" content="2022-09-17T12:04:32.971Z">
+<meta property="article:author" content="Shishu">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static001.geekbang.org/infoq/07/07b2035f17caa952d5b8145a7699ede7.jpeg"><link rel="shortcut icon" href="https://static001.geekbang.org/infoq/d5/d5d0722a0ec2661dad640887d9a99692.png"><link rel="canonical" href="http://example.com/post/6d8dab0a"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":180},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Python应用实践——设计一个学生管理系统',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-17 20:04:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/flipcountdown.css"><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://static001.geekbang.org/infoq/c1/c1ac453f8f67ab9c4d04a92829afd18b.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://static001.geekbang.org/infoq/07/07b2035f17caa952d5b8145a7699ede7.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">武师叔</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友人帐</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Python应用实践——设计一个学生管理系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-05T11:47:20.000Z" title="发表于 2022-05-05 19:47:20">2022-05-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-09-17T12:04:32.971Z" title="更新于 2022-09-17 20:04:32">2022-09-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Python应用实践——设计一个学生管理系统"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="项目要求-设计一个学生管理系统"><a href="#项目要求-设计一个学生管理系统" class="headerlink" title="项目要求 设计一个学生管理系统"></a><strong>项目要求</strong> <strong>设计一个学生管理系统</strong></h1><p>关联的主要课程目标： Python 函数和模块、Python文件的数据读取及操作等。</p>
+<p>项目要求：设计一个学生管理系统，实现学生基本信息（学号、姓名、性别）的录入、删除和查看、读取及保存功能。</p>
+<p>项目指导：可将学生管理系统分为六个小模块：添加学生信息模块、删除学生信息模块、显示所有学生信息模块、保存数据模块、恢复数据模块、退出系统模块等。每个功能模块用函数来实现。</p>
+<ol>
+<li><p>定义一个全局变量***用于存储所有学生的信息，利用列表存储。</p>
+</li>
+<li><p>定义一个打印功能菜单的函数，用于提示用户（1,2,3,4,5,0）功能选择。</p>
+</li>
+<li><p>定义一个用于添加学生信息的函数，在该函数中用于输入学生的信息（学号、姓名、性别），使用字典存储每个学生的具体信息，并添加到全局变量***列表中。</p>
+</li>
+<li><p>定义一个用于删除学生信息的函数，在该函数中提示用户输入要删除学生的学号，使用remove( )方法删除相应的学生信息。</p>
+</li>
+<li><p>定义一个显示所有学生信息的函数，在该函数中遍历存储学生信息的列表，输出每个学生的详细信息。</p>
+</li>
+<li><p>定义一个保存学生数据的函数，用于将学生信息数据保存到文件中，write( )方法的参数必须是字符串类型，需要将字典类型的数据强制转换为字符串后进行写入。</p>
+</li>
+<li><p>定义一个恢复数据函数，从文件中读取数据到变量，从文件中读取到的内容是字符串，需要将这些带有特点格式的字符串转换为其原来的类型，可调用eval( )函数将字符串转换为字典。</p>
+</li>
+<li><p>最后定义一个main函数，用于控制整个程序的流程。在该函数中用循环实现，先打印功能菜单(1,2,3,4,5,0)，再获取用户输入，并根据用户输入选择相应的功能模块，最后输入“0”退出程序的执行。</p>
+</li>
+<li><p>代码实现（附讲解）</p>
+</li>
+<li><pre><code>#定义功能函数界面
+def info_print():
+    print(&quot;请选择功能--------------------&quot;)
+    print(&quot;1、添加学员&quot;)
+    print(&quot;2、删除学员&quot;)
+    print(&quot;3、修改学员&quot;)
+    print(&quot;4、查询学员&quot;)
+    print(&quot;5、显示所有学员&quot;)
+    print(&quot;0、退出系统&quot;)
+    print(&#39;-&#39;*20)
+#等待储存所以学员信息
+info = []
+#添加学员信息函数
+def add_info():
+    &quot;&quot;&quot;添加学员&quot;&quot;&quot;
+    #接受用户输入信息 学号.姓名.手机号
+    new_id = input(&quot;请输入学号：&quot;)
+    new_name = input(&quot;请输入姓名：&quot;)
+    new_tel = input(&quot;请输入性别：&quot;)
+    #声明info是全局变量
+    global info
+    #检测用户姓名是否存在，存在则报错提示
+    for i in info:
+        if new_id == i[&#39;id&#39;]:
+            print(&quot;该用户已经存在！&quot;)
+            return  #return作用：退出当前函数，后面添加信息的代码不执行（返回值或退出当前函数）
+    #如果用户输入的姓名不存在，则添加学员信息
+    info_dict = &#123;&#125;
+    #将用户输入的数据追加到字典
+    info_dict[&#39;id&#39;] = new_id
+    info_dict[&#39;name&#39;] = new_name
+    info_dict[&#39;tel&#39;] = new_tel
+    print(info_dict)
+    #将这个学员信息的字典数据追加到列表
+    info.append(info_dict)
+    print(info)
+#删除学员
+def del_infor():
+    &quot;&quot;&quot;&quot;删除学员&quot;&quot;&quot;
+    #1.用户输入要删的学员姓名
+    del_name = input(&quot;请输入要删的学员姓名：&quot;)
+    global info
+    #2.判断学员是否存在：如果输入的姓名存在则删除，否则报错提醒
+    for i in info:
+        if del_name == i[&#39;name&#39;]:
+            info.remove(i)
+            break
+        else:
+            print(&quot;该学员不存在&quot;)
+    print(info)
+#修改函数
+def modify_infor():
+    &quot;&quot;&quot;&quot;修改函数&quot;&quot;&quot;
+    #1.用户输入要修改的学员姓名
+    modify_name = input(&quot;请输入要修改的学员姓名：&quot;)
+    global info
+    #2.判断学员是否存在：如果输入的姓名存在则更正性别，否则报错提醒
+    for i in info:
+        if modify_name == i[&#39;name&#39;]:
+            i[&#39;tel&#39;] = input(&quot;请输入更正性别：&quot;)
+            break
+        else:
+            print(&quot;该学员不存在&quot;)
+    print(info)
+#查询学员
+def search_infor():
+    &quot;&quot;&quot;查询学员&quot;&quot;&quot;
+    #1.用户输入要修改的学员姓名
+    search_name = input(&quot;请输入要修改的学员姓名：&quot;)
+    global info
+    #2.判断学员是否存在：如果输入的姓名存在则显示这位学员信息，否则报错提醒
+    for i in info:
+        if search_name == i[&#39;name&#39;]:
+            print(&quot;查找信息如下：-----------------&quot;)
+            print(f&quot;该学员的学号是&#123;i[&#39;id&#39;]&#125;,姓名是&#123;i[&#39;name&#39;]&#125;,性别是&#123;i[&#39;tel&#39;]&#125;&quot;)
+            break
+        else:
+            print(&quot;查无此人......&quot;)
+#显示所有学员信息
+def print_all():
+    &quot;&quot;&quot;显示所有学员信息&quot;&quot;&quot;
+    print(&#39;学号\t姓名\t性别&#39;)
+    for i in info:
+        print(f&quot;&#123;i[&#39;id&#39;]&#125;\t&#123;i[&#39;name&#39;]&#125;\t&#123;i[&#39;tel&#39;]&#125;&quot;)
+#用户变量循环使用，直到用户输入6，才退出系统
+while True:
+    #1.显示功能界面
+    info_print()
+    #2.用户输入功能序号
+    user_num = int(input(&quot;请输入功能序号： &quot;))
+    #3.按照用户输入的功能序号，执行不同的功能（函数）
+    #如果用户输入1，执行添加；如果用户输入2，执行删除----多重判断
+    if user_num == 1:
+        print(&quot;添加&quot;)
+        add_info()
+    elif user_num == 2:
+        print(&quot;删除&quot;)
+        del_infor()
+    elif user_num == 3:
+        print(&quot;修改&quot;)
+        modify_infor()
+    elif user_num == 4:
+        print(&quot;查询&quot;)
+        search_infor()
+    elif user_num == 5:
+        print(&quot;显示所有成员信息&quot;)
+        print_all()
+    elif user_num == 0:
+        print(&quot;退出系统&quot;)
+        exit_flag = input(&quot;确定要退出吗？yes or no  &quot;)
+        if exit_flag == &#39;yes&#39;:
+            break
+    else:
+        print(&quot;输入有误！&quot;)
+</code></pre>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Shishu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/6d8dab0a.html">http://example.com/post/6d8dab0a.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">武师叔</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a></div><div class="post_share"><div class="social-share" data-image="https://static001.geekbang.org/infoq/07/07b2035f17caa952d5b8145a7699ede7.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://img-blog.csdnimg.cn/3f67bf23dead46deaa50b9575d2509ba.png" target="_blank"><img class="post-qr-code-img" src="https://img-blog.csdnimg.cn/3f67bf23dead46deaa50b9575d2509ba.png" alt="微信支付"/></a><div class="post-qr-code-desc">微信支付</div></li><li class="reward-item"><a href="https://img-blog.csdnimg.cn/fdbf755dba2d4cd8bac1b4a5654ee695.png" target="_blank"><img class="post-qr-code-img" src="https://img-blog.csdnimg.cn/fdbf755dba2d4cd8bac1b4a5654ee695.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/3af17477.html"><img class="prev-cover" src="https://static001.geekbang.org/infoq/61/6194b362b4a37a97dc0c6d0acc646c4c.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LeeCode704（二分查找）</div></div></a></div><div class="next-post pull-right"><a href="/post/c3a6706b.html"><img class="next-cover" src="https://static001.geekbang.org/infoq/cf/cf3b49e4814fffe962a3c31e3308ceb5.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">YYDS-油猴子--让你浏览器加成buff</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://static001.geekbang.org/infoq/c1/c1ac453f8f67ab9c4d04a92829afd18b.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Shishu</div><div class="author-info__description">做一个有趣而不甘平庸的人！</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/521754445"><i class="iconfont icon-youxishoubing"></i><span>摸鱼</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://m.qpic.cn/psc?/V53WhVZM1zBmH82CmFwL0UozAc1z3onc/ruAMsa53pVQWN7FLK88i5mhCK83VD7tAOVZT.GYfY0OWO.NRsrmuM*NxJf1ToObkkOK.ggMBbqkkTXmTn7PP*HoUhVmrKo8S6x3wSi2Yc.Q!/b&amp;bo=OARnBQAAAAABF24!&amp;rf=viewer_4" target="_blank" title="微信"><i class="iconfont icon-weixin"></i></a><a class="social-icon" href="https://blog.csdn.net/wushibo123" target="_blank" title="CSDN"><i class="iconfont icon-csdn"></i></a><a class="social-icon" href="https://github.com/Wushishu" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://juejin.cn/user/1464978572059806" target="_blank" title="掘金"><i class="iconfont icon-juejin"></i></a><a class="social-icon" href="https://space.bilibili.com/521754445" target="_blank" title="bilibili"><i class="iconfont icon-bilibili"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><b><center><font color="#e66b6d">双</font> <font color="#e66d98">手</font> <font color="#e66cc6">合</font> <font color="#cc6de6">十</font> <font color="#9770e6">成</font> <font color="#6d93e6">为</font> <font color="#6fcde6">自</font> <font color="#72e6b6">己</font> <font color="#72e689">的</font> <font color="#99e670">神</font> </center>   <br> <center><font color="#cde670">自</font> <font color="#e6df72">己</font> <font color="#e6c073">所</font> <font color="#e6a271">信</font> <font color="#e6796f">念</font> <font color="#e65454">的</font> <font color="#e63333">即</font> <font color="#e62c2c">是</font> <font color="#e60101">信</font> <font color="#e60101">仰</font></b></center> <p align="center"><img src="https://img-blog.csdnimg.cn/f7384c88956d4378b72e47548e19c9f8.gif" width="50" alt="mao"></p> <p align="center">微信号：wushibo0820</p> <p align="center">QQ号：2116099522</p></div></div><canvas class="illo" width="800" height="800" style="max-width: 200px; max-height: 200px; touch-action: none; width: 640px; height: 640px;"></canvas><script src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/twopeople1.js"></script><script src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/zdog.dist.js"></script><script id="rendered-js" src="https://cdn.jsdelivr.net/gh/xiaopengand/blogCdn@latest/xzxr/twopeople.js"></script><style>.card-widget.card-announcement {
+margin: 0;
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+canvas {
+display: block;
+margin: 0 auto;
+cursor: move;
+}</style><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E8%A6%81%E6%B1%82-%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">项目要求 设计一个学生管理系统</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/50816dfc.html" title="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）"><img src="https://static001.geekbang.org/infoq/ad/ade3f12aa8e618298b360c36d227d69b.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）"/></a><div class="content"><a class="title" href="/post/50816dfc.html" title="大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）">大逆不道，从天界偷下来的算法修仙秘籍竟然传到你手上~~（结尾有彩蛋）</a><time datetime="2022-09-17T12:34:20.000Z" title="发表于 2022-09-17 20:34:20">2022-09-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/9a29ab04.html" title="一个特殊的母亲节"><img src="https://img-blog.csdnimg.cn/8ea7ef1761fd402dad8dbdf719d2e3dd.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一个特殊的母亲节"/></a><div class="content"><a class="title" href="/post/9a29ab04.html" title="一个特殊的母亲节">一个特殊的母亲节</a><time datetime="2022-05-08T11:54:20.000Z" title="发表于 2022-05-08 19:54:20">2022-05-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/c2045a9e.html" title="leecode206（反转链表）"><img src="https://static001.geekbang.org/infoq/e1/e199fa3ae9eddd039c1f66a406486b2f.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leecode206（反转链表）"/></a><div class="content"><a class="title" href="/post/c2045a9e.html" title="leecode206（反转链表）">leecode206（反转链表）</a><time datetime="2022-05-07T11:56:03.000Z" title="发表于 2022-05-07 19:56:03">2022-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/3454cac5.html" title="leecode59（ 螺旋矩阵 II）"><img src="https://static001.geekbang.org/infoq/c6/c6cd78b51d09f0295f79dacb0d0d7d2a.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leecode59（ 螺旋矩阵 II）"/></a><div class="content"><a class="title" href="/post/3454cac5.html" title="leecode59（ 螺旋矩阵 II）">leecode59（ 螺旋矩阵 II）</a><time datetime="2022-05-07T11:53:00.000Z" title="发表于 2022-05-07 19:53:00">2022-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/20200563.html" title="PAT乙级1002-写出这个数"><img src="https://static001.geekbang.org/infoq/40/402ebe69bfa9acb19740af0c183dbea7.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PAT乙级1002-写出这个数"/></a><div class="content"><a class="title" href="/post/20200563.html" title="PAT乙级1002-写出这个数">PAT乙级1002-写出这个数</a><time datetime="2022-05-07T11:49:15.000Z" title="发表于 2022-05-07 19:49:15">2022-05-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://static001.geekbang.org/infoq/07/07b2035f17caa952d5b8145a7699ede7.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Shishu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script async src="/js/weather.js"></script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script defer src="/live2d-widget/autoload.js"></script>'<script src="/js/sun_moon.js" async></script>'<script async src="//at.alicdn.com/t/font_2264842_3izu8i5eoc2.js"></script><script async src="//at.alicdn.com/t/font_3277826_xghotx9h49q.js"></script><script async src="//at.alicdn.com/t/font_2032782_ev6ytrh30f.js"></script><script async src="//at.alicdn.com/t/font_2032782_8ns648avijk.js"></script><script data-pjax defer src="/js/custom/fixed_card_widget.js"></script><script src="https://npm.elemecdn.com/jquery@latest/dist/jquery.min.js"></script><script src="/js/flipcountdown.js"></script><script data-pjax src="/js/runtime.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = ture;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
